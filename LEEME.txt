@@ -1,0 +1,97 @@
+CUATRI · Organizador universitario (v1.0.1)
+===========================================
+
+QUÉ HAY EN ESTA CARPETA
+- index.html .............. La aplicación completa (pantallas, lógica y estilos). No usa librerías externas.
+- manifest.webmanifest .... Nombre, colores e íconos para instalarla como app.
+- sw.js ................... "Service worker": guarda una copia de la app en el teléfono para que abra sin conexión
+                            y muestra las notificaciones. No guarda ni envía tus datos.
+- icons/ .................. Íconos: apple-touch-icon.png (pantalla de inicio del iPhone), icon-192/512 y maskable.
+
+Subí SIEMPRE todo junto, con la carpeta icons. Si solo subís index.html, la app abre, pero no se instala bien ni
+funciona sin conexión.
+
+------------------------------------------------------------
+1. VISTA PREVIA Y PRUEBA EN LA COMPUTADORA
+------------------------------------------------------------
+- Vista previa dentro de Claude: abre y se puede navegar, pero ese entorno bloquea el almacenamiento. Por eso
+  muestra el aviso "Modo vista previa: no se guarda nada". Sirve solo para ver cómo se ve.
+- Doble clic a index.html (Chrome o Edge): funciona y guarda en esa computadora. Ahí no hay instalación, modo sin
+  conexión ni notificaciones, porque eso requiere HTTPS.
+
+------------------------------------------------------------
+2. PUBLICARLA EN GITHUB PAGES (gratis, sin instalar nada)
+------------------------------------------------------------
+A) Crear el repositorio
+   1) Entrá a https://github.com e iniciá sesión (o creá la cuenta gratuita).
+   2) Arriba a la derecha tocá "+" → "New repository".
+   3) Repository name: cuatri   (este nombre va a ser parte de la dirección).
+   4) Elegí "Public". En cuentas gratuitas, GitHub Pages solo funciona con repositorios públicos.
+      Se va a ver el código, pero NO tus datos: esos viven solo en tu iPhone.
+   5) No marqués nada más. Tocá "Create repository".
+
+B) Subir los archivos
+   1) Descomprimí cuatri.zip en la computadora. Te queda una carpeta "cuatri".
+   2) En la página del repositorio tocá el enlace "uploading an existing file"
+      (o "Add file" → "Upload files").
+   3) Abrí la carpeta "cuatri", seleccioná TODO su contenido (index.html, manifest.webmanifest, sw.js,
+      LEEME.txt y la carpeta icons) y arrastralo a la página de GitHub.
+      OJO: arrastrá el CONTENIDO, no la carpeta "cuatri" en sí. index.html tiene que quedar en la raíz del
+      repositorio, no dentro de una subcarpeta.
+   4) Esperá a que carguen los archivos (deben verse los 4 PNG dentro de icons/).
+   5) Abajo, en "Commit changes", tocá el botón verde "Commit changes".
+   6) Revisá que en la página principal del repositorio se vean: icons/, LEEME.txt, index.html,
+      manifest.webmanifest y sw.js.
+
+C) Activar GitHub Pages
+   1) En el repositorio tocá "Settings" (pestaña de arriba) → en el menú izquierdo "Pages".
+   2) En "Build and deployment" → Source: "Deploy from a branch".
+   3) En Branch elegí "main" y la carpeta "/ (root)". Tocá "Save".
+   4) Esperá 1 a 3 minutos y recargá esa página. Arriba aparece:
+      "Your site is live at https://TU-USUARIO.github.io/cuatri/"
+      Si no aparece, revisá la pestaña "Actions": el proceso "pages build and deployment" debe terminar en verde.
+   5) Abrí esa dirección en la computadora para confirmar que carga.
+
+D) Actualizar la app más adelante
+   1) En el repositorio: "Add file" → "Upload files" → arrastrá los archivos nuevos (mismos nombres) → "Commit changes".
+      GitHub reemplaza los anteriores.
+   2) En el iPhone abrí la app con internet. Si aparece "Hay una versión nueva", tocá "Recargar".
+      Si no aparece, cerrala y abrila de nuevo. Tus datos no se tocan al actualizar.
+
+------------------------------------------------------------
+3. INSTALARLA EN EL iPHONE 15 PRO
+------------------------------------------------------------
+   1) Abrí https://TU-USUARIO.github.io/cuatri/ en Safari.
+   2) Tocá Compartir (cuadro con flecha). En iOS 26 o posterior puede estar dentro del botón ··· de la barra.
+   3) Elegí "Agregar a pantalla de inicio" (si no aparece, tocá "Ver más").
+   4) Si aparece "Abrir como app web", dejalo activado. Tocá "Agregar".
+   5) Abrí Cuatri desde el ícono con internet una vez. Desde ahí funciona sin conexión.
+   OJO: Safari y la app instalada guardan datos por separado. Usá siempre la app instalada.
+
+------------------------------------------------------------
+4. NOTIFICACIONES (qué sí funciona y qué no)
+------------------------------------------------------------
+   - Requieren iOS 16.4 o posterior y la app instalada en la pantalla de inicio.
+   - Activalas en Ajustes de Cuatri → "Activar notificaciones" → Permitir.
+   - Llegan mientras la app está abierta o se usó hace poco. Con la app CERRADA no se garantizan: iOS no deja que una
+     app web programe avisos sin un servidor push, y esta app no usa servidores.
+   - Para avisos garantizados: Ajustes → "Exportar pendientes al Calendario (.ics)". Una vez agregados al Calendario
+     del iPhone, las alarmas las da el propio iPhone. Si iOS no ofrece "Agregar", usá "Compartir el .ics",
+     mandátelo por Mail y abrí el adjunto. Volvé a exportarlo cuando cambiés fechas.
+   - Los recordatorios siempre aparecen dentro de la app, en Inicio.
+
+------------------------------------------------------------
+5. RESPALDO
+------------------------------------------------------------
+   Guardar: Ajustes → Respaldo → "Guardar respaldo en Archivos / Compartir" → "Guardar en Archivos"
+            (te recomiendo iCloud Drive). Se crea cuatri-respaldo-AAAA-MM-DD.json.
+   Restaurar: Ajustes → "Importar respaldo" → elegí el .json → confirmá. Reemplaza todos los datos del equipo.
+   Pasar datos entre equipos: exportás en uno e importás en el otro. NO hay sincronización automática.
+   Nunca subas el respaldo .json al repositorio de GitHub: es público.
+
+------------------------------------------------------------
+6. DATOS
+------------------------------------------------------------
+   Todo se guarda automáticamente en el almacenamiento local de esa app o navegador, en ese dispositivo.
+   No se sincroniza entre iPhone, computadora u otros equipos. Si borrás la app, el ícono o los datos de
+   sitios web de Safari, se pierde todo: hacé respaldos seguido.

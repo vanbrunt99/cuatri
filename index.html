@@ -1,0 +1,1629 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cuatri · Organizador universitario</title>
+<meta name="description" content="Organizador de materias, notas, pendientes y programa de 15 semanas.">
+<meta name="theme-color" content="#0A0D14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cuatri">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<style>
+:root{
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --r:20px;--r-sm:14px;--tab-h:60px;
+  --sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);
+  --sal:env(safe-area-inset-left,0px);--sar:env(safe-area-inset-right,0px);
+  --bg:#0A0D14;--bg-glass:rgba(10,13,20,.82);--statusbar:#0A0D14;
+  --card:#131927;--card2:#1A2233;--input:#1A2132;--line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.14);
+  --text:#EEF1F6;--muted:#A3ACBC;--dim:#6E788B;
+  --accent:#D9B676;--accent-2:#B8914B;--accent-ink:#17120A;--accent-soft:rgba(217,182,118,.14);
+  --danger:#FF6B6B;--danger-soft:rgba(255,107,107,.14);
+  --warn:#F5B94A;--warn-soft:rgba(245,185,74,.15);
+  --ok:#3DD68C;--ok-soft:rgba(61,214,140,.14);
+  --info:#6AA8FF;--info-soft:rgba(106,168,255,.15);
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+  --hero:linear-gradient(145deg,#1B2438 0%,#121827 60%,#0F1420 100%);
+  color-scheme:dark;
+}
+html[data-theme=light]{
+  --bg:#F3F4F7;--bg-glass:rgba(243,244,247,.86);--statusbar:#0E1525;
+  --card:#FFFFFF;--card2:#F1F3F7;--input:#EEF0F4;--line:rgba(14,21,37,.09);--line2:rgba(14,21,37,.16);
+  --text:#0E1525;--muted:#556074;--dim:#8A93A4;
+  --accent:#9C7431;--accent-2:#7E5C22;--accent-ink:#FFFFFF;--accent-soft:rgba(156,116,49,.12);
+  --danger:#D63B3B;--danger-soft:rgba(214,59,59,.1);
+  --warn:#B4741A;--warn-soft:rgba(180,116,26,.12);
+  --ok:#17905A;--ok-soft:rgba(23,144,90,.1);
+  --info:#2F6FD6;--info-soft:rgba(47,111,214,.1);
+  --shadow:0 10px 30px rgba(14,21,37,.12);
+  --hero:linear-gradient(145deg,#141C2F 0%,#1D2741 100%);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: light){
+  html[data-theme=system]{
+    --bg:#F3F4F7;--bg-glass:rgba(243,244,247,.86);--statusbar:#0E1525;
+    --card:#FFFFFF;--card2:#F1F3F7;--input:#EEF0F4;--line:rgba(14,21,37,.09);--line2:rgba(14,21,37,.16);
+    --text:#0E1525;--muted:#556074;--dim:#8A93A4;
+    --accent:#9C7431;--accent-2:#7E5C22;--accent-ink:#FFFFFF;--accent-soft:rgba(156,116,49,.12);
+    --danger:#D63B3B;--danger-soft:rgba(214,59,59,.1);
+    --warn:#B4741A;--warn-soft:rgba(180,116,26,.12);
+    --ok:#17905A;--ok-soft:rgba(23,144,90,.1);
+    --info:#2F6FD6;--info-soft:rgba(47,111,214,.1);
+    --shadow:0 10px 30px rgba(14,21,37,.12);
+    --hero:linear-gradient(145deg,#141C2F 0%,#1D2741 100%);
+    color-scheme:light;
+  }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:16px;line-height:1.4;
+  padding:0 calc(16px + var(--sar)) calc(var(--tab-h) + var(--sab) + 96px) calc(16px + var(--sal));min-height:100vh;
+  -webkit-font-smoothing:antialiased;overscroll-behavior-y:none}
+body::before{content:"";position:fixed;z-index:60;top:0;left:0;right:0;height:var(--sat);background:var(--statusbar)}
+body.sheet-open{overflow:hidden}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0;padding:0}
+a{color:var(--accent);text-decoration:none}
+.ic{width:22px;height:22px;flex:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+#app{max-width:760px;margin:0 auto}
+/* Encabezado */
+.top{padding-top:calc(var(--sat) + 10px);margin-bottom:14px}
+.top-row{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px}
+.title{font-size:32px;line-height:1.1;font-weight:750;letter-spacing:-.025em;margin:6px 0 0}
+.subtitle{color:var(--muted);font-size:15px;margin-top:4px}
+.sem-chip{display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:0 12px 0 10px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-size:14px;font-weight:600;color:var(--muted);max-width:78%}
+.sem-chip span.t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sem-chip .ic{width:16px;height:16px}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px var(--ok-soft);flex:none}
+.live-dot.arch{background:var(--dim);box-shadow:0 0 0 3px var(--line)}
+.back{display:inline-flex;align-items:center;gap:2px;min-height:44px;font-weight:600;font-size:16px;margin-left:-6px}
+.back .ic{width:24px;height:24px}
+.top-actions{display:flex;gap:8px;align-items:center}
+.icon-btn{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);color:var(--text)}
+.icon-btn .ic{width:20px;height:20px}
+/* Secciones */
+.section{margin:26px 0 10px;display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.section h2{font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0}
+.section a,.section button.lnk{font-size:14px;font-weight:600;color:var(--accent);min-height:32px;display:inline-flex;align-items:center}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.card + .card{margin-top:10px}
+.stack>*+*{margin-top:8px}
+.muted{color:var(--muted)}.dim{color:var(--dim)}
+.small{font-size:13.5px}
+.num{font-variant-numeric:tabular-nums}
+/* Hero */
+.hero{background:var(--hero);border-radius:24px;padding:20px 18px 18px;color:#EEF1F6;position:relative;overflow:hidden;border:1px solid rgba(217,182,118,.22);box-shadow:var(--shadow)}
+.hero::after{content:"";position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(217,182,118,.22),transparent 70%)}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#D9B676;font-weight:700}
+.hero-row{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:6px;position:relative;z-index:1}
+.big{font-size:64px;line-height:.95;font-weight:780;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.big small{font-size:24px;color:#9AA4B5;font-weight:600;letter-spacing:-.01em;margin-left:2px}
+.big.txt{font-size:34px;letter-spacing:-.02em}
+.hero-side{text-align:right;font-size:14px;color:#B9C1CF;line-height:1.35}
+.hero-side b{display:block;font-size:26px;color:#fff;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.bar{height:8px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:16px}
+.bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#B8914B,#E9CB8F)}
+.strip{display:grid;grid-template-columns:repeat(15,1fr);gap:4px;margin-top:12px}
+.strip i{height:22px;border-radius:5px;background:rgba(255,255,255,.08);display:grid;place-items:center;font-size:10px;font-style:normal;color:#8E98AA;font-weight:600}
+.strip i.p{background:rgba(217,182,118,.28);color:#E9D2A3}
+.strip i.c{background:#D9B676;color:#17120A;font-weight:800}
+.hero-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:14px;font-size:13.5px;color:#B9C1CF;position:relative;z-index:1;flex-wrap:wrap}
+.hero-foot button{color:#E9CB8F;font-weight:650;min-height:36px;padding:0 2px}
+.tag-manual{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px;background:rgba(217,182,118,.2);color:#E9CB8F;margin-left:6px;vertical-align:2px}
+/* Tiles */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;text-align:left;min-height:96px;display:flex;flex-direction:column;justify-content:space-between}
+.tile .n{font-size:36px;font-weight:760;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+.tile .l{font-size:13.5px;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:6px}
+.tile .l::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c,var(--dim))}
+.tile.t-danger .n{color:var(--danger)}.tile.t-warn .n{color:var(--warn)}.tile.t-info .n{color:var(--info)}.tile.t-ok .n{color:var(--ok)}
+/* Banners */
+.banner{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:16px;background:var(--card);border:1px solid var(--line);margin-top:12px;font-size:14.5px}
+.banner .ic{width:20px;height:20px;margin-top:1px}
+.banner.danger{background:var(--danger-soft);border-color:transparent}.banner.danger .ic{color:var(--danger)}
+.banner.warn{background:var(--warn-soft);border-color:transparent}.banner.warn .ic{color:var(--warn)}
+.banner.info{background:var(--info-soft);border-color:transparent}.banner.info .ic{color:var(--info)}
+.banner.ok{background:var(--ok-soft);border-color:transparent}.banner.ok .ic{color:var(--ok)}
+.banner.accent{background:var(--accent-soft);border-color:transparent}.banner.accent .ic{color:var(--accent)}
+.banner b{display:block;margin-bottom:2px}
+.banner .acts{display:flex;gap:14px;margin-top:8px;flex-wrap:wrap}
+.banner .acts button,.banner .acts a{font-weight:700;color:var(--accent);min-height:32px}
+.inbox-item{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+.inbox-item:first-of-type{border-top:0}
+/* Items */
+.list{display:flex;flex-direction:column;gap:8px}
+.item{display:flex;align-items:stretch;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:16px;position:relative;overflow:hidden;width:100%;text-align:left}
+.item::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--stripe,transparent)}
+.item.f-overdue{--stripe:var(--danger)}.item.f-soon{--stripe:var(--warn)}
+.item.is-done .item-title{text-decoration:line-through;color:var(--dim)}
+.check{width:52px;flex:none;display:grid;place-items:center;min-height:56px}
+.check::before{content:"";width:26px;height:26px;border-radius:50%;border:2px solid var(--line2);grid-area:1/1;transition:.15s}
+.check .ic{grid-area:1/1;width:16px;height:16px;color:transparent;stroke-width:3}
+.check.on::before{background:var(--ok);border-color:var(--ok)}
+.check.on .ic{color:#06150D}
+.item-body{flex:1;min-width:0;padding:12px 14px 12px 0;text-align:left;display:flex;flex-direction:column;gap:3px;min-height:56px;justify-content:center}
+.item-body.pad{padding-left:14px}
+.item-title{font-weight:640;font-size:16px;line-height:1.3;overflow-wrap:anywhere}
+.item-meta{font-size:13.5px;color:var(--muted);display:flex;flex-wrap:wrap;align-items:center;gap:0 6px}
+.item-meta i{font-style:normal;color:var(--dim)}
+.sdot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--c);margin-right:2px;flex:none}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.badge{display:inline-flex;align-items:center;font-size:11.5px;font-weight:750;letter-spacing:.02em;padding:3px 8px;border-radius:999px;background:var(--card2);color:var(--muted);white-space:nowrap}
+.badge.danger{background:var(--danger-soft);color:var(--danger)}.badge.warn{background:var(--warn-soft);color:var(--warn)}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}.badge.info{background:var(--info-soft);color:var(--info)}
+.badge.accent{background:var(--accent-soft);color:var(--accent)}
+.item-side{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;padding:10px 14px 10px 6px;flex:none;text-align:right}
+.grade{font-size:26px;font-weight:760;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
+.grade.none{color:var(--dim);font-size:20px}
+.item-side small{font-size:12px;color:var(--muted);margin-top:4px;white-space:nowrap}
+.eval-ic{width:52px;flex:none;display:grid;place-items:center}
+.eval-ic span{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--c)}
+.eval-ic .ic{width:18px;height:18px}
+.empty{text-align:center;padding:26px 16px;color:var(--muted);background:var(--card);border:1px dashed var(--line2);border-radius:var(--r);font-size:15px}
+.empty b{display:block;color:var(--text);font-size:17px;margin-bottom:4px}
+.empty .btn{margin-top:14px}
+/* Botones */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:0 18px;border-radius:14px;font-weight:700;font-size:16px;background:var(--card2);color:var(--text);border:1px solid var(--line)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.btn.danger{background:var(--danger-soft);color:var(--danger);border-color:transparent}
+.btn.ghost{background:transparent}
+.btn.block{width:100%}
+.btn .ic{width:19px;height:19px}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.btn-col{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.fab{position:fixed;z-index:40;right:calc(18px + var(--sar));bottom:calc(var(--tab-h) + var(--sab) + 16px);width:58px;height:58px;border-radius:20px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;box-shadow:0 10px 24px rgba(0,0,0,.35)}
+.fab .ic{width:26px;height:26px;stroke-width:2.4}
+.fab[hidden]{display:none}
+/* Materias */
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.scard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;text-align:left;position:relative;overflow:hidden;display:flex;flex-direction:column;gap:8px;min-height:150px}
+.scard::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:var(--c)}
+.scard .nm{font-weight:700;font-size:15.5px;line-height:1.25;min-height:2.5em}
+.scard .avg{font-size:34px;font-weight:770;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+.scard .avg small{font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:0;display:block;margin-top:4px}
+.scard .mini{font-size:12.5px;color:var(--muted);line-height:1.35}
+.minibar{height:6px;border-radius:999px;background:var(--card2);overflow:hidden}
+.minibar i{display:block;height:100%;background:var(--c);border-radius:inherit}
+.good{color:var(--ok)}.mid{color:var(--warn)}.bad{color:var(--danger)}
+.srow{display:flex;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;width:100%;text-align:left}
+.srow + .srow{margin-top:10px}
+.srow .sw{width:12px;align-self:stretch;border-radius:6px;background:var(--c);flex:none}
+.srow .info{flex:1;min-width:0}
+.srow .info b{display:block;font-size:17px;line-height:1.25}
+.srow .info span{display:block;font-size:13.5px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.srow .r{text-align:right;flex:none}
+.srow .r b{font-size:26px;font-weight:760;letter-spacing:-.02em;font-variant-numeric:tabular-nums;display:block;line-height:1}
+.srow .r small{font-size:12px;color:var(--muted)}
+.subhead{border-radius:22px;padding:18px;background:var(--card);border:1px solid var(--line);position:relative;overflow:hidden}
+.subhead::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,color-mix(in srgb,var(--c) 22%,transparent),transparent 65%);pointer-events:none}
+.subhead>*{position:relative}
+.tabs{display:flex;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px;margin:14px 0 4px;position:sticky;top:var(--sat);z-index:20}
+.tabs a,.tabs button{flex:1;text-align:center;padding:10px 4px;border-radius:10px;font-weight:650;font-size:14px;color:var(--muted);min-height:40px}
+.tabs .on{background:var(--card2);color:var(--text);box-shadow:0 1px 0 var(--line2)}
+.kv{display:grid;grid-template-columns:1fr;gap:0}
+.kv>div{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-top:1px solid var(--line);font-size:15px}
+.kv>div:first-child{border-top:0}
+.kv span{color:var(--muted);flex:none}
+.kv b{font-weight:600;text-align:right;overflow-wrap:anywhere}
+.notes-box{white-space:pre-wrap;font-size:15px;line-height:1.5;overflow-wrap:anywhere}
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 10px}
+.kpi-n{font-size:27px;font-weight:770;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+.kpi-n small{font-size:13px;color:var(--muted);font-weight:600;letter-spacing:0}
+.kpi-l{font-size:12.5px;font-weight:650;color:var(--muted);margin-top:8px;line-height:1.25}
+.kpi-s{font-size:11.5px;color:var(--dim);margin-top:3px;line-height:1.25}
+.stackbar{display:flex;height:12px;border-radius:999px;overflow:hidden;background:var(--card2);margin-top:14px}
+.stackbar i{display:block;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:12.5px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend span::before{content:"";width:10px;height:10px;border-radius:3px;background:var(--c)}
+/* Programa */
+.week{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.week + .week{margin-top:8px}
+.week.current{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.week.past .wk-h{opacity:.72}
+.wk-h{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;min-height:60px;text-align:left}
+.wk-n{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-weight:800;font-size:16px;background:var(--card2);color:var(--muted);flex:none;font-variant-numeric:tabular-nums}
+.week.current .wk-n{background:var(--accent);color:var(--accent-ink)}
+.week.past .wk-n{background:var(--ok-soft);color:var(--ok)}
+.wk-t{flex:1;min-width:0}
+.wk-t b{display:block;font-size:15.5px}
+.wk-t span{display:block;font-size:13px;color:var(--muted)}
+.wk-h .ic{width:18px;height:18px;color:var(--dim);transition:transform .2s}
+.week.open .wk-h .ic.chev{transform:rotate(180deg)}
+.wk-b{padding:0 14px 14px;display:none}
+.week.open .wk-b{display:block}
+.witem{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
+.witem:first-child{border-top:0}
+.witem .wchk{width:28px;height:28px;flex:none;border-radius:8px;border:2px solid var(--line2);display:grid;place-items:center;margin-top:1px}
+.witem .wchk .ic{width:15px;height:15px;color:transparent;stroke-width:3}
+.witem .wchk.on{background:var(--ok);border-color:var(--ok)}.witem .wchk.on .ic{color:#06150D}
+.witem .wbody{flex:1;min-width:0;text-align:left;min-height:30px}
+.witem .wbody b{font-weight:600;font-size:15px;display:block;overflow-wrap:anywhere}
+.witem.done .wbody b{text-decoration:line-through;color:var(--dim)}
+.witem .wbody .wd{font-size:13px;color:var(--muted);display:block;white-space:pre-wrap;overflow-wrap:anywhere}
+.ttag{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:6px;margin-bottom:3px;background:var(--card2);color:var(--muted)}
+.ttag.tema{color:#6AA8FF;background:rgba(106,168,255,.13)}.ttag.lectura{color:#B28CFF;background:rgba(178,140,255,.14)}
+.ttag.clase{color:#3DD68C;background:rgba(61,214,140,.13)}.ttag.examen{color:#FF6B6B;background:rgba(255,107,107,.14)}
+.ttag.tarea{color:#F5B94A;background:rgba(245,185,74,.15)}.ttag.nota{color:var(--muted)}
+.wk-sub{font-size:12px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin:14px 0 6px}
+.wk-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.chipbtn{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:999px;background:var(--card2);border:1px solid var(--line);font-weight:650;font-size:14px}
+.chipbtn .ic{width:16px;height:16px}
+.chipbtn.on{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+/* Agenda */
+.seg-nav{display:flex;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px}
+.seg-nav button{flex:1;min-height:40px;border-radius:10px;font-weight:650;font-size:14.5px;color:var(--muted)}
+.seg-nav button.on{background:var(--card2);color:var(--text);box-shadow:0 1px 0 var(--line2)}
+.datenav{display:flex;align-items:center;gap:8px;margin:14px 0 10px}
+.datenav .lbl{flex:1;text-align:center;min-width:0}
+.datenav .lbl b{display:block;font-size:17px}
+.datenav .lbl span{font-size:13px;color:var(--muted)}
+.today-btn{min-height:36px;padding:0 12px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:13.5px}
+.dayblk{margin-top:14px}
+.dayblk h3{font-size:14px;margin:0 0 8px;display:flex;align-items:center;gap:8px;color:var(--muted);font-weight:700}
+.dayblk.is-today h3{color:var(--accent)}
+.dayblk h3 .cnt{margin-left:auto;font-size:12px;color:var(--dim);font-weight:650}
+.dayempty{font-size:14px;color:var(--dim);padding:10px 14px;border:1px dashed var(--line);border-radius:14px}
+.month{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.month .dow{text-align:center;font-size:11.5px;font-weight:700;color:var(--dim);padding:4px 0;text-transform:uppercase}
+.mcell{min-height:52px;border-radius:12px;background:var(--card);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:6px 2px 4px;gap:4px;font-variant-numeric:tabular-nums}
+.mcell.out{opacity:.35}
+.mcell .d{font-size:15px;font-weight:650;line-height:1}
+.mcell.today .d{color:var(--accent);font-weight:850}
+.mcell.sel{background:var(--accent);border-color:var(--accent)}
+.mcell.sel .d{color:var(--accent-ink)}
+.mcell .dots{display:flex;gap:3px;flex-wrap:wrap;justify-content:center;max-width:34px}
+.mcell .dots i{width:6px;height:6px;border-radius:50%;background:var(--c)}
+.mcell .dots i.od{box-shadow:0 0 0 1.5px var(--danger)}
+.mcell.sel .dots i{box-shadow:0 0 0 1.5px var(--accent-ink)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 4px;margin:12px -16px 0;padding-left:16px;padding-right:16px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chips .chipbtn{flex:none}
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.fsel{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.03em}
+.count{font-size:13px;color:var(--muted);margin:14px 2px 8px}
+/* Formularios */
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field>span,.flabel{font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.02em}
+.field small{font-size:12.5px;color:var(--dim)}
+.input,select.input,textarea.input{width:100%;min-height:48px;padding:12px 14px;border-radius:13px;background:var(--input);border:1px solid var(--line);font-size:16px;color:var(--text);outline:none;-webkit-appearance:none;appearance:none}
+textarea.input{min-height:96px;resize:vertical;line-height:1.45}
+select.input{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 20px) 21px,calc(100% - 15px) 21px;background-size:5px 5px;background-repeat:no-repeat;padding-right:36px}
+.input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+input[type=date].input,input[type=time].input{display:block;line-height:22px}
+input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and-time-value{text-align:left;min-height:22px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg{display:flex;background:var(--input);border:1px solid var(--line);border-radius:13px;padding:3px;gap:3px}
+.seg label{flex:1;position:relative}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg span{display:flex;align-items:center;justify-content:center;text-align:center;min-height:40px;padding:4px 6px;border-radius:10px;font-weight:650;font-size:14px;color:var(--muted);line-height:1.15}
+.seg input:checked+span{background:var(--card);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.seg input:focus-visible+span{outline:2px solid var(--accent)}
+.chipset{display:flex;flex-wrap:wrap;gap:8px}
+.chipset label{position:relative}
+.chipset input{position:absolute;opacity:0;pointer-events:none}
+.chipset span{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border-radius:999px;background:var(--input);border:1px solid var(--line);font-weight:600;font-size:14px;color:var(--muted)}
+.chipset input:checked+span{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.swatches{display:flex;flex-wrap:wrap;gap:10px}
+.swatches label{position:relative}
+.swatches input{position:absolute;opacity:0}
+.swatches span{display:block;width:40px;height:40px;border-radius:50%;background:var(--c);border:3px solid transparent;box-shadow:0 0 0 1px var(--line2)}
+.swatches input:checked+span{border-color:var(--bg);box-shadow:0 0 0 2px var(--text)}
+.hint{font-size:13.5px;padding:10px 12px;border-radius:12px;background:var(--card2);color:var(--muted);margin:-4px 0 14px}
+.hint.danger{background:var(--danger-soft);color:var(--danger)}
+.hint.ok{background:var(--ok-soft);color:var(--ok)}
+.hint b{color:var(--text)}
+.switch{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px}
+.switch input{width:52px;height:32px;-webkit-appearance:none;appearance:none;border-radius:999px;background:var(--line2);position:relative;flex:none;transition:.2s}
+.switch input::after{content:"";position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.switch input:checked{background:var(--ok)}
+.switch input:checked::after{left:23px}
+/* Ajustes */
+.set-group{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.set-row{display:flex;align-items:center;gap:12px;padding:14px 16px;border-top:1px solid var(--line);width:100%;text-align:left;min-height:56px}
+.set-row:first-child{border-top:0}
+.set-row .grow{flex:1;min-width:0}
+.set-row .grow b{display:block;font-size:16px;font-weight:620}
+.set-row .grow span{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+.set-row>.ic{color:var(--dim);width:18px;height:18px}
+.set-body{padding:16px}
+.steps{margin:8px 0 0;padding-left:20px;font-size:14.5px;line-height:1.55}
+.steps li{margin:4px 0}
+.status-pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:750;padding:4px 10px;border-radius:999px}
+/* Hoja inferior */
+#sheet-root{position:fixed;inset:0;z-index:80;pointer-events:none}
+#sheet-root.open{pointer-events:auto}
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;transition:opacity .22s}
+#sheet-root.open .scrim{opacity:1}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:calc(100% - var(--sat) - 12px);background:var(--bg);border-radius:24px 24px 0 0;transform:translateY(100%);transition:transform .28s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;box-shadow:0 -10px 40px rgba(0,0,0,.4);border-top:1px solid var(--line2)}
+#sheet-root.open .sheet{transform:none}
+.sheet-head{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line);flex:none}
+.sheet-head::before{content:"";position:absolute;top:6px;left:50%;width:38px;height:5px;margin-left:-19px;border-radius:3px;background:var(--line2)}
+.sheet-head h2{font-size:16.5px;margin:0;text-align:center;font-weight:700;padding-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:56vw}
+.sheet-head .link{min-height:44px;padding:6px 6px 0;font-size:16px;color:var(--accent);font-weight:500;justify-self:start}
+.sheet-head .link.strong{font-weight:750;justify-self:end}
+.sheet-body{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 16px calc(var(--sab) + 24px);overscroll-behavior:contain}
+.sheet-danger{margin-top:8px;padding-top:16px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+/* Diálogo */
+#dialog-root{position:fixed;inset:0;z-index:95;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.55)}
+#dialog-root.open{display:flex}
+.dialog{background:var(--card);border:1px solid var(--line2);border-radius:22px;padding:22px 18px 16px;width:100%;max-width:380px;box-shadow:var(--shadow)}
+.dialog h3{margin:0 0 8px;font-size:19px}
+.dialog p{margin:0 0 14px;color:var(--muted);font-size:15px;line-height:1.45}
+/* Toast */
+#toast-root{position:fixed;z-index:99;left:0;right:0;bottom:calc(var(--tab-h) + var(--sab) + 86px);display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;padding:0 16px}
+.toast{pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;width:100%;background:#1F2738;color:#F2F4F8;border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:12px 14px;font-size:14.5px;box-shadow:0 12px 30px rgba(0,0,0,.4);animation:tin .22s ease-out}
+.toast.danger{border-color:rgba(255,107,107,.5)}
+.toast.ok{border-color:rgba(61,214,140,.45)}
+.toast .t{flex:1}
+.toast button{color:#E9CB8F;font-weight:750;min-height:32px}
+@keyframes tin{from{transform:translateY(10px);opacity:0}}
+#pill{position:fixed;z-index:45;bottom:calc(var(--tab-h) + var(--sab) + 12px);left:calc(16px + var(--sal));display:flex;gap:6px;pointer-events:none}
+@media (min-width:900px){#pill{left:auto;right:24px;top:16px;bottom:auto}}
+#pill span{font-size:12px;font-weight:700;padding:5px 10px;border-radius:999px;background:var(--card2);color:var(--muted);border:1px solid var(--line);opacity:0;transition:opacity .3s}
+#pill span.show{opacity:1}
+#pill span:not(.show){display:none}
+#pill span.off{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+/* Barra inferior */
+.tabbar{position:fixed;z-index:50;left:0;right:0;bottom:0;height:calc(var(--tab-h) + var(--sab));padding:0 calc(8px + var(--sar)) var(--sab) calc(8px + var(--sal));display:grid;grid-template-columns:repeat(4,1fr);background:var(--bg-glass);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-top:1px solid var(--line)}
+.tabbar a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--dim);font-size:11px;font-weight:650;letter-spacing:.01em;position:relative}
+.tabbar a .ic{width:25px;height:25px}
+.tabbar a.on{color:var(--accent)}
+.tabbar a .bdg[hidden]{display:none}
+.tabbar a .bdg{position:absolute;top:6px;left:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--danger);color:#fff;font-size:11px;font-weight:800;display:grid;place-items:center}
+@media (min-width:900px){
+  body{padding-left:calc(112px + var(--sal));padding-bottom:48px}
+  .tabbar{top:0;bottom:0;right:auto;width:96px;height:auto;grid-template-columns:1fr;grid-auto-rows:84px;align-content:start;padding:28px 8px;border-top:0;border-right:1px solid var(--line)}
+  .fab{bottom:32px;right:40px}
+  #toast-root{bottom:28px}
+  #app{max-width:980px}
+  .sgrid{grid-template-columns:repeat(4,1fr)}
+  .tiles{grid-template-columns:repeat(4,1fr)}
+  .home-cols{display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
+  .sheet{left:50%;right:auto;bottom:50%;width:560px;max-height:86vh;border-radius:24px;transform:translate(-50%,60%);opacity:0;transition:transform .25s,opacity .2s}
+  #sheet-root.open .sheet{transform:translate(-50%,50%);opacity:1}
+  .sheet-head::before{display:none}
+}
+@media (max-width:360px){.big{font-size:54px}.kpi-n{font-size:23px}.title{font-size:28px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<nav class="tabbar" aria-label="Navegación principal">
+  <a href="#/inicio" data-tab="inicio"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.2 12 3l9 7.2V20a1 1 0 0 1-1 1h-5.5v-6h-5v6H4a1 1 0 0 1-1-1z"/></svg><span>Inicio</span><b class="bdg" id="bdg-inicio" hidden></b></a>
+  <a href="#/materias" data-tab="materias"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h14v15H6a2 2 0 0 0-2 2 2 2 0 0 0 2 2h14"/><path d="M9 7h7"/></svg><span>Materias</span></a>
+  <a href="#/agenda" data-tab="agenda"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg><span>Agenda</span></a>
+  <a href="#/ajustes" data-tab="ajustes"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2.2"/><circle cx="9" cy="17" r="2.2"/></svg><span>Ajustes</span></a>
+</nav>
+<button class="fab" id="fab" data-action="fab" aria-label="Nuevo pendiente" hidden><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+<div id="pill"><span id="pill-off" class="off">Sin conexión</span><span id="pill-saved">Guardado ✓</span></div>
+<div id="sheet-root"></div>
+<div id="dialog-root" role="dialog" aria-modal="true"></div>
+<div id="toast-root"></div>
+<input type="file" id="import-file" class="sr" tabindex="-1">
+<noscript><p style="padding:40px 20px">Esta aplicación necesita JavaScript activado.</p></noscript>
+<script>
+'use strict';
+/* ============================================================
+   Cuatri · Organizador universitario  (v1.0.0)
+   Sin dependencias externas. Datos en localStorage del dispositivo.
+   ============================================================ */
+const APP_VERSION = '1.0.1';
+const KEY = 'cuatri.datos.v1';
+const WEEKS = 15;
+const COLORS = ['#4C8DFF','#2BB673','#A970FF','#F2A93B','#FF6B8A','#22C3D6','#E0C25A','#8F9BB3'];
+const TYPES = {tema:'Tema',lectura:'Lectura',clase:'Clase',examen:'Examen',tarea:'Tarea',nota:'Nota'};
+const PRIORITIES = {alta:'Alta',media:'Media',baja:'Baja'};
+const PRIO_RANK = {alta:0,media:1,baja:2};
+const STATUSES = {pendiente:'Pendiente',progreso:'En progreso',terminado:'Terminado'};
+const STATUS_RANK = {pendiente:0,progreso:1,terminado:2};
+const REMINDER_OPTS = [[0,'A la hora'],[15,'15 min antes'],[60,'1 hora antes'],[180,'3 horas antes'],[1440,'1 día antes'],[2880,'2 días antes'],[10080,'1 semana antes']];
+const REF_HOUR_NO_TIME = 8; // si un pendiente no tiene hora, los recordatorios se calculan desde las 8:00
+
+/* ---------- Íconos ---------- */
+const I = {
+  plus:'<path d="M12 5v14M5 12h14"/>', check:'<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  left:'<path d="m15 18-6-6 6-6"/>', right:'<path d="m9 18 6-6-6-6"/>', down:'<path d="m6 9 6 6 6-6"/>',
+  bell:'<path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10.3 20a1.9 1.9 0 0 0 3.4 0"/>',
+  edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',
+  archive:'<rect x="3" y="4" width="18" height="5" rx="1.5"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/>',
+  trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
+  link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+  download:'<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>', upload:'<path d="M12 16V4M7 9l5-5 5 5M5 21h14"/>',
+  share:'<path d="M12 3v12M8 7l4-4 4 4"/><path d="M5 12v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8"/>',
+  x:'<path d="M6 6l12 12M18 6 6 18"/>', clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  alert:'<path d="M12 3.5 2.5 20h19z"/><path d="M12 10v4.5M12 17.3v.2"/>',
+  info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.8v.2"/>',
+  cap:'<path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5M22 9v6"/>',
+  cal:'<rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
+  phone:'<rect x="6.5" y="2" width="11" height="20" rx="2.5"/><path d="M11 18h2"/>',
+  restore:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>',
+  shield:'<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/>',
+  list:'<path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/>'
+};
+const ic = (n, cls='') => `<svg class="ic ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[n]||''}</svg>`;
+
+/* ---------- Utilidades ---------- */
+const $ = (s, el=document) => el.querySelector(s);
+const $$ = (s, el=document) => [...el.querySelectorAll(s)];
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const isNum = v => typeof v === 'number' && isFinite(v);
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const sum = (arr, f) => arr.reduce((a, x) => a + (f ? f(x) : x), 0);
+const parseNum = v => { if (v === null || v === undefined) return null; const s = String(v).trim().replace(/\s/g,'').replace(',', '.'); if (s === '') return null; const n = Number(s); return isFinite(n) ? n : NaN; };
+const num = (n, d=2) => isNum(n) ? Number(n).toLocaleString('es-CR', {maximumFractionDigits:d, minimumFractionDigits:0}) : '—';
+const pad = n => String(n).padStart(2, '0');
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parseD = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
+const validISO = s => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s) && !isNaN(parseD(s));
+const todayISO = () => iso(new Date());
+const addDays = (s, n) => { const d = parseD(s); d.setDate(d.getDate() + n); return iso(d); };
+const diffDays = (a, b) => { const A = parseD(a), B = parseD(b); return Math.round((Date.UTC(B.getFullYear(),B.getMonth(),B.getDate()) - Date.UTC(A.getFullYear(),A.getMonth(),A.getDate())) / 864e5); };
+const mondayOf = s => { const d = parseD(s); return addDays(s, -((d.getDay() + 6) % 7)); };
+const fmtD = (s, o) => new Intl.DateTimeFormat('es-CR', o).format(parseD(s));
+const fmtShort = s => fmtD(s, {weekday:'short', day:'numeric', month:'short'}).replace(/\./g,'');
+const fmtLong = s => fmtD(s, {weekday:'long', day:'numeric', month:'long'});
+const fmtDM = s => fmtD(s, {day:'numeric', month:'short'}).replace(/\./g,'');
+const fmtDMY = s => fmtD(s, {day:'numeric', month:'short', year:'numeric'}).replace(/\./g,'');
+const fmtTime = t => { if (!t) return ''; const [h,m] = t.split(':').map(Number); const d = new Date(2000,0,1,h,m); return new Intl.DateTimeFormat('es-CR', {hour:'numeric', minute:'2-digit'}).format(d).replace(/\s?a\.?\s?m\.?/i,' a. m.').replace(/\s?p\.?\s?m\.?/i,' p. m.'); };
+const cap1 = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+const rangeTxt = (a, b) => `${fmtDM(a)} – ${fmtDM(b)}`;
+
+/* ---------- Estado ---------- */
+function seedData() {
+  const semId = uid();
+  const now = new Date().toISOString();
+  const sem = {id:semId, name:'Cuatrimestre sep–dic 2026', start:'2026-09-07', end:'2026-12-20', archived:false, weekOffset:0, createdAt:now};
+  const subs = [['Ciberseguridad','#4C8DFF'],['Métodos de desarrollo de software','#2BB673'],['Programación avanzada','#A970FF'],['Gerencia de proyectos','#F2A93B']]
+    .map(([name,color]) => ({id:uid(), semesterId:semId, name, color, teacher:'', room:'', schedule:'', link:'', notes:'', archived:false, createdAt:now}));
+  return {sem, subs};
+}
+function emptyState() {
+  return {
+    app:'cuatri', version:1,
+    semesters:[], subjects:[], evaluations:[], tasks:[], weekItems:[], inbox:[], notified:{},
+    settings:{theme:'dark', passGrade:70, soonDays:3, reminderOffsets:[1440,60], notifications:false, installDismissed:false},
+    ui:{viewSemesterId:null, agendaMode:'semana', filters:{subject:'', status:'activos', priority:'', week:'', sort:'fecha'}},
+    meta:{createdAt:new Date().toISOString(), updatedAt:new Date().toISOString()}
+  };
+}
+function initialState() {
+  const st = emptyState(); const {sem, subs} = seedData();
+  st.semesters.push(sem); st.subjects.push(...subs); st.ui.viewSemesterId = sem.id;
+  return st;
+}
+function migrate(d) {
+  const def = emptyState();
+  const out = Object.assign({}, def, d);
+  out.settings = Object.assign({}, def.settings, d.settings || {});
+  out.ui = Object.assign({}, def.ui, d.ui || {});
+  out.ui.filters = Object.assign({}, def.ui.filters, (d.ui && d.ui.filters) || {});
+  out.meta = Object.assign({}, def.meta, d.meta || {});
+  ['semesters','subjects','evaluations','tasks','weekItems','inbox'].forEach(k => { if (!Array.isArray(out[k])) out[k] = []; });
+  if (!out.notified || typeof out.notified !== 'object' || Array.isArray(out.notified)) out.notified = {};
+  if (!Array.isArray(out.settings.reminderOffsets)) out.settings.reminderOffsets = [1440,60];
+  out.tasks.forEach(t => { if (!Array.isArray(t.reminders)) t.reminders = out.settings.reminderOffsets.slice(); if (!STATUSES[t.status]) t.status = 'pendiente'; if (!PRIORITIES[t.priority]) t.priority = 'media'; });
+  out.semesters.forEach(s => { if (!isNum(s.weekOffset)) s.weekOffset = 0; });
+  if (!out.semesters.find(s => s.id === out.ui.viewSemesterId)) out.ui.viewSemesterId = (out.semesters.find(s => !s.archived) || out.semesters[0] || {}).id || null;
+  out.app = 'cuatri'; out.version = 1;
+  return out;
+}
+let S; let storageOK = true;
+const storageAvailable = (() => { try { const k = '__cuatri_test__'; localStorage.setItem(k, '1'); localStorage.removeItem(k); return true; } catch (e) { return false; } })();
+const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+function load() {
+  try {
+    const raw = storageAvailable ? localStorage.getItem(KEY) : null;
+    if (raw) { S = migrate(JSON.parse(raw)); return; }
+  } catch (e) { console.warn('No se pudo leer el almacenamiento', e); storageOK = false; }
+  S = initialState(); persistNow(true);
+}
+let saveTimer = null;
+function save() { S.meta.updatedAt = new Date().toISOString(); clearTimeout(saveTimer); saveTimer = setTimeout(persistNow, 200); }
+function persistNow(silent) {
+  clearTimeout(saveTimer); saveTimer = null;
+  if (!storageAvailable) { storageOK = false; return; }
+  try { localStorage.setItem(KEY, JSON.stringify(S)); storageOK = true; if (!silent) flashSaved(); }
+  catch (e) { storageOK = false; toast('No se pudo guardar. El almacenamiento está lleno o bloqueado (¿navegación privada?). Exportá un respaldo.', {type:'danger', ms:7000}); }
+}
+function commit(fn) { fn && fn(); save(); render(); }
+window.addEventListener('pagehide', () => { if (saveTimer) persistNow(true); });
+document.addEventListener('visibilitychange', () => { if (document.hidden && saveTimer) persistNow(true); if (!document.hidden) { checkReminders(); softRefresh(); } });
+
+/* ---------- Consultas ---------- */
+const semById = id => S.semesters.find(s => s.id === id);
+const viewSem = () => semById(S.ui.viewSemesterId) || null;
+const subjectById = id => S.subjects.find(s => s.id === id);
+const taskById = id => S.tasks.find(t => t.id === id);
+const evalById = id => S.evaluations.find(e => e.id === id);
+const subjectsOf = (semId, withArchived=false) => S.subjects.filter(s => s.semesterId === semId && (withArchived || !s.archived));
+const semTasks = semId => S.tasks.filter(t => t.semesterId === semId);
+const semEvals = semId => { const ids = new Set(S.subjects.filter(s => s.semesterId === semId).map(s => s.id)); return S.evaluations.filter(e => ids.has(e.subjectId)); };
+const semOfSubject = id => { const s = subjectById(id); return s ? semById(s.semesterId) : null; };
+
+function rawWeek(sem, dateStr) { return Math.floor(diffDays(sem.start, dateStr) / 7) + 1; }
+function weekForDate(sem, dateStr) { return rawWeek(sem, dateStr) + (sem.weekOffset || 0); }
+function currentWeek(sem) { return weekForDate(sem, todayISO()); }
+function weekRange(sem, n) { const s = addDays(sem.start, (n - 1 - (sem.weekOffset || 0)) * 7); return [s, addDays(s, 6)]; }
+function inWeeks(n) { return isNum(n) && n >= 1 && n <= WEEKS ? n : null; }
+function semDays(sem) { return Math.max(1, diffDays(sem.start, sem.end) + 1); }
+function semProgress(sem) { const el = clamp(diffDays(sem.start, todayISO()) + 1, 0, semDays(sem)); return el / semDays(sem); }
+function taskSem(t) { return semById(t.semesterId); }
+function taskWeek(t) { if (isNum(t.week)) return t.week; const sem = taskSem(t); return t.date && sem ? inWeeks(weekForDate(sem, t.date)) : null; }
+function evalWeek(e) { if (isNum(e.week)) return e.week; const sem = semOfSubject(e.subjectId); return e.date && sem ? inWeeks(weekForDate(sem, e.date)) : null; }
+
+function dueMoment(t) { if (!t.date) return null; const d = parseD(t.date); if (t.time) { const [h,m] = t.time.split(':').map(Number); d.setHours(h, m, 0, 0); } else d.setHours(23, 59, 0, 0); return d; }
+function refMoment(t) { const d = parseD(t.date); if (t.time) { const [h,m] = t.time.split(':').map(Number); d.setHours(h, m, 0, 0); } else d.setHours(REF_HOUR_NO_TIME, 0, 0, 0); return d; }
+function flag(t) {
+  if (t.status === 'terminado') return 'done';
+  if (!t.date) return 'nodate';
+  const now = Date.now(), due = dueMoment(t).getTime();
+  if (due < now) return 'overdue';
+  if (due - now <= (S.settings.soonDays || 3) * 864e5) return 'soon';
+  return 'later';
+}
+function byDue(a, b) { const A = a.date ? dueMoment(a).getTime() : Infinity, B = b.date ? dueMoment(b).getTime() : Infinity; return A - B || (PRIO_RANK[a.priority] - PRIO_RANK[b.priority]); }
+
+function gradeStats(subjectId) {
+  const evs = S.evaluations.filter(e => e.subjectId === subjectId);
+  const totalWeight = sum(evs, e => e.weight || 0);
+  const graded = evs.filter(e => isNum(e.grade));
+  const gradedWeight = sum(graded, e => e.weight || 0);
+  const points = sum(graded, e => (e.weight || 0) * e.grade / 100);
+  const avg = gradedWeight > 0 ? points / gradedWeight * 100 : null;
+  const remaining = Math.max(0, 100 - gradedWeight);
+  const pendingWeight = totalWeight - gradedWeight; // registradas sin nota
+  const pass = S.settings.passGrade || 70;
+  const needed = remaining > 0 ? (pass - points) / remaining * 100 : null;
+  return {evs, count:evs.length, gradedCount:graded.length, totalWeight, gradedWeight, points, avg, remaining, pendingWeight, pass, needed, over: totalWeight > 100.0001};
+}
+function gradeClass(v) { if (!isNum(v)) return ''; const p = S.settings.passGrade || 70; return v >= p ? 'good' : v >= p - 10 ? 'mid' : 'bad'; }
+
+/* ---------- Rutas ---------- */
+// Enrutador tolerante: usa el #hash cuando el navegador lo permite y, si no (vista previa aislada), funciona en memoria.
+const hashRouting = (() => { try { return location.protocol !== 'about:' && location.protocol !== 'data:'; } catch (e) { return false; } })();
+const readHash = () => { if (!hashRouting) return ''; try { return location.hash || ''; } catch (e) { return ''; } };
+let curHash = /^#\/\w/.test(readHash()) ? readHash() : '#/inicio';
+function route() { const h = curHash.replace(/^#\/?/, '') || 'inicio'; const [view, id, sub] = h.split('/'); return {view: view || 'inicio', id, sub}; }
+function go(h) {
+  curHash = h || '#/inicio';
+  if (hashRouting) { try { if (readHash() !== curHash) location.hash = curHash; } catch (e) {} }
+  closeSheetIfOpen(); render();
+}
+
+/* ---------- Componentes ---------- */
+const badge = (t, c='') => `<span class="badge ${c}">${esc(t)}</span>`;
+function semChip() {
+  const s = viewSem();
+  if (!s) return `<span></span>`;
+  return `<button class="sem-chip" data-action="pick-semester" aria-label="Cambiar de cuatrimestre"><span class="live-dot ${s.archived ? 'arch' : ''}"></span><span class="t">${esc(s.name)}</span>${ic('down')}</button>`;
+}
+function topbar(title, {back='', actions='', sub=''} = {}) {
+  return `<header class="top"><div class="top-row">${back ? `<a class="back" href="${back}">${ic('left')}<span>Atrás</span></a>` : semChip()}<div class="top-actions">${actions}</div></div><h1 class="title">${esc(title)}</h1>${sub ? `<div class="subtitle">${sub}</div>` : ''}</header>`;
+}
+function dueText(t) {
+  if (!t.date) return 'Sin fecha';
+  const d = diffDays(todayISO(), t.date);
+  const day = d === 0 ? 'Hoy' : d === 1 ? 'Mañana' : d === -1 ? 'Ayer' : fmtShort(t.date);
+  return day + (t.time ? ' · ' + fmtTime(t.time) : '');
+}
+function leftText(t) {
+  const ms = dueMoment(t).getTime() - Date.now();
+  const h = Math.floor(ms / 36e5);
+  if (h < 1) return 'Vence en ' + Math.max(1, Math.round(ms / 6e4)) + ' min';
+  if (h < 24) return 'Vence en ' + h + ' h';
+  const d = Math.round(ms / 864e5); return d === 1 ? 'Vence en 1 día' : 'Vence en ' + d + ' días';
+}
+function overdueText(t) {
+  const ms = Date.now() - dueMoment(t).getTime(); const d = Math.floor(ms / 864e5);
+  if (d < 1) { const h = Math.max(1, Math.floor(ms / 36e5)); return 'Vencido hace ' + h + ' h'; }
+  return 'Vencido hace ' + d + (d === 1 ? ' día' : ' días');
+}
+function taskRow(t, {showSubject=true, showDate=true} = {}) {
+  const s = subjectById(t.subjectId); const f = flag(t); const done = t.status === 'terminado';
+  const meta = [];
+  if (showSubject) meta.push(`<span><span class="sdot" style="--c:${s ? s.color : 'var(--dim)'}"></span> ${esc(s ? s.name : 'General')}</span>`);
+  if (showDate) meta.push(`<span>${esc(dueText(t))}</span>`);
+  const w = taskWeek(t); if (w) meta.push(`<span>Sem. ${w}</span>`);
+  const b = [];
+  if (f === 'overdue') b.push(badge(overdueText(t), 'danger'));
+  else if (f === 'soon') b.push(badge(leftText(t), 'warn'));
+  if (t.status === 'progreso') b.push(badge('En progreso', 'info'));
+  if (done) b.push(badge('Terminado', 'ok'));
+  if (!done && t.priority === 'alta') b.push(badge('Prioridad alta', 'accent'));
+  if (!done && t.priority === 'baja') b.push(badge('Prioridad baja'));
+  if (t.evaluationId && evalById(t.evaluationId)) b.push(badge('↳ ' + evalById(t.evaluationId).name));
+  return `<div class="item task f-${f} ${done ? 'is-done' : ''}">
+    <button class="check ${done ? 'on' : ''}" data-action="toggle-done" data-id="${t.id}" aria-label="${done ? 'Marcar como pendiente' : 'Marcar como terminado'}">${ic('check')}</button>
+    <button class="item-body" data-action="edit-task" data-id="${t.id}"><span class="item-title">${esc(t.title)}</span><span class="item-meta">${meta.join('<i>·</i>')}</span>${b.length ? `<span class="badges">${b.join('')}</span>` : ''}</button>
+  </div>`;
+}
+function evalRow(e, {showSubject=true} = {}) {
+  const s = subjectById(e.subjectId) || {color:'var(--dim)', name:'—'};
+  const g = isNum(e.grade);
+  const meta = [];
+  if (showSubject) meta.push(`<span>${esc(s.name)}</span>`);
+  meta.push(`<span>Vale ${num(e.weight)}%</span>`);
+  const w = evalWeek(e); if (w) meta.push(`<span>Sem. ${w}</span>`);
+  if (e.date) meta.push(`<span>${esc(fmtShort(e.date))}</span>`);
+  const late = !g && e.date && diffDays(todayISO(), e.date) < 0;
+  return `<button class="item eval" data-action="edit-eval" data-id="${e.id}">
+    <span class="eval-ic" style="--c:${s.color}"><span>${ic('cap')}</span></span>
+    <span class="item-body"><span class="item-title">${esc(e.name)}</span><span class="item-meta">${meta.join('<i>·</i>')}</span>${late ? `<span class="badges">${badge('Fecha pasada · sin nota','warn')}</span>` : ''}</span>
+    <span class="item-side"><span class="grade ${g ? gradeClass(e.grade) : 'none'}">${g ? num(e.grade, 2) : 'Sin nota'}</span>${g ? `<small>+${num(e.weight * e.grade / 100)} pts</small>` : `<small>${num(e.weight)}% del curso</small>`}</span>
+  </button>`;
+}
+function emptyBox(title, text, btn='') { return `<div class="empty"><b>${esc(title)}</b>${esc(text)}${btn ? `<div>${btn}</div>` : ''}</div>`; }
+function noSemester(title) {
+  return topbar(title) + `<div class="empty"><b>No hay cuatrimestres</b>Creá uno nuevo o cargá los datos iniciales con tus cuatro materias.
+    <div class="btn-col"><button class="btn primary" data-action="new-sem">${ic('plus')} Nuevo cuatrimestre</button><button class="btn" data-action="seed">Cargar datos iniciales (4 materias)</button></div></div>`;
+}
+function previewBanner() {
+  if (storageAvailable) return '';
+  return `<div class="banner warn">${ic('alert')}<div><b>Modo vista previa: no se guarda nada</b>Este entorno bloquea el almacenamiento, así que los cambios se pierden al cerrar. Para usarla de verdad abrila desde GitHub Pages (o con doble clic al index.html en Chrome/Edge).</div></div>`;
+}
+function archivedBanner(sem) {
+  if (!sem || !sem.archived) return '';
+  return `<div class="banner warn">${ic('archive')}<div><b>Cuatrimestre archivado</b>Estás consultando datos guardados. Podés editarlos o reactivar este cuatrimestre.<div class="acts"><button data-action="unarchive-sem" data-id="${sem.id}">Reactivar</button><button data-action="pick-semester">Cambiar de cuatrimestre</button></div></div></div>`;
+}
+
+/* ---------- Vista: Inicio ---------- */
+function viewInicio() {
+  const sem = viewSem(); if (!sem) return noSemester('Inicio');
+  const w = currentWeek(sem); const prog = semProgress(sem);
+  const tasks = semTasks(sem.id);
+  const overdue = tasks.filter(t => flag(t) === 'overdue').sort(byDue);
+  const soon = tasks.filter(t => flag(t) === 'soon').sort(byDue);
+  const inprog = tasks.filter(t => t.status === 'progreso').sort(byDue);
+  const done = tasks.filter(t => t.status === 'terminado').sort((a,b) => (b.completedAt||'').localeCompare(a.completedAt||''));
+  const today = todayISO();
+  const evs = semEvals(sem.id);
+  const upcoming = [
+    ...tasks.filter(t => t.status !== 'terminado' && t.date && dueMoment(t).getTime() >= Date.now()).map(t => ({k:'t', at:dueMoment(t).getTime(), x:t})),
+    ...evs.filter(e => !isNum(e.grade) && e.date && e.date >= today).map(e => ({k:'e', at:parseD(e.date).getTime() + 8*36e5, x:e}))
+  ].sort((a,b) => a.at - b.at).slice(0, 8);
+  const lateEvals = evs.filter(e => !isNum(e.grade) && e.date && e.date < today);
+
+  let heroMain, heroSide;
+  const wn = inWeeks(w);
+  if (w < 1) { heroMain = `<div class="big txt">Por iniciar</div>`; heroSide = `<b>${diffDays(today, sem.start)}</b> días para iniciar`; }
+  else if (w > WEEKS) { heroMain = `<div class="big txt">Finalizado</div>`; heroSide = `<b>100%</b> completado`; }
+  else { const [a,b] = weekRange(sem, w); heroMain = `<div class="big">${w}<small>/${WEEKS}</small></div>`; heroSide = `${rangeTxt(a,b)}<b>${Math.round(prog*100)}%</b>del cuatrimestre`; }
+  const strip = Array.from({length:WEEKS}, (_, i) => { const n = i + 1; const c = n === w ? 'c' : n < w ? 'p' : ''; return `<i class="${c}">${n}</i>`; }).join('');
+
+  const inbox = S.inbox.filter(x => !x.read);
+  const inboxHTML = inbox.length ? `<div class="banner accent">${ic('bell')}<div style="flex:1;min-width:0"><b>Recordatorios (${inbox.length})</b>${inbox.slice(0,4).map(x => `<div class="inbox-item"><button style="text-align:left" data-action="edit-task" data-id="${x.taskId}">${esc(x.text)}</button><span class="dim small" style="white-space:nowrap">${new Date(x.at).toLocaleTimeString('es-CR',{hour:'numeric',minute:'2-digit'})}</span></div>`).join('')}<div class="acts"><button data-action="inbox-clear">Marcar como leídos</button></div></div></div>` : '';
+
+  const notifTip = (!S.settings.installDismissed && !isStandalone()) ? `<div class="banner info">${ic('phone')}<div><b>${isIOS() ? 'Instalala en tu iPhone' : 'Instalala como app'}</b>${isIOS() ? 'Agregala a la pantalla de inicio' : 'Instalala desde el navegador'} para usarla sin conexión y activar recordatorios compatibles.<div class="acts"><a href="#/ajustes">Ver cómo</a><button data-action="dismiss-install">Ocultar</button></div></div></div>` : '';
+
+  const subs = subjectsOf(sem.id);
+  const subCards = subs.length ? `<div class="sgrid">${subs.map(s => subjectCard(s)).join('')}</div>` : emptyBox('Sin materias', 'Agregá las materias de este cuatrimestre.', `<button class="btn primary" data-action="new-subject">${ic('plus')} Nueva materia</button>`);
+
+  const thisWeekItems = wn ? S.weekItems.filter(x => x.week === wn && subs.some(s => s.id === x.subjectId)) : [];
+  const weekHTML = wn ? `<div class="section"><h2>Programa · semana ${wn}</h2></div>${thisWeekItems.length ? `<div class="card">${thisWeekItems.slice(0,8).map(x => weekItemRow(x, true)).join('')}</div>` : `<div class="dayempty">No hay temas, lecturas ni clases cargadas para esta semana. Agregalos desde Materias → Programa.</div>`}` : '';
+
+  return topbar('Inicio', {sub: cap1(fmtLong(today))}) + previewBanner() + archivedBanner(sem) + inboxHTML + notifTip + `
+  <section class="hero" style="margin-top:12px">
+    <div class="eyebrow">Semana actual${sem.weekOffset ? '<span class="tag-manual">Ajustada</span>' : ''}</div>
+    <div class="hero-row">${heroMain}<div class="hero-side">${heroSide}</div></div>
+    <div class="bar"><i style="width:${(prog*100).toFixed(1)}%"></i></div>
+    <div class="strip" aria-hidden="true">${strip}</div>
+    <div class="hero-foot"><span>${esc(fmtDMY(sem.start))} – ${esc(fmtDMY(sem.end))}</span><button data-action="adjust-week">Corregir semana</button></div>
+  </section>
+  <div class="tiles">
+    <button class="tile t-danger" style="--c:var(--danger)" data-action="go-filter" data-f="vencidos"><span class="n">${overdue.length}</span><span class="l">Vencidos</span></button>
+    <button class="tile t-warn" style="--c:var(--warn)" data-action="go-filter" data-f="proximos"><span class="n">${soon.length}</span><span class="l">Próximos a vencer</span></button>
+    <button class="tile t-info" style="--c:var(--info)" data-action="go-filter" data-f="progreso"><span class="n">${inprog.length}</span><span class="l">En progreso</span></button>
+    <button class="tile t-ok" style="--c:var(--ok)" data-action="go-filter" data-f="terminado"><span class="n">${done.length}</span><span class="l">Terminados</span></button>
+  </div>
+  ${lateEvals.length ? `<div class="banner warn">${ic('cap')}<div><b>${lateEvals.length} ${lateEvals.length === 1 ? 'evaluación' : 'evaluaciones'} con fecha pasada sin nota</b>${lateEvals.slice(0,3).map(e => esc(e.name)).join(', ')}${lateEvals.length > 3 ? '…' : ''}. Registrá la calificación cuando la tengás.</div></div>` : ''}
+  <div class="home-cols"><div>
+  ${overdue.length ? `<div class="section"><h2>Vencidos</h2><a href="#/agenda" data-action="go-filter" data-f="vencidos">Ver todos</a></div><div class="list">${overdue.slice(0,5).map(t => taskRow(t)).join('')}</div>` : ''}
+  <div class="section"><h2>Próximos vencimientos</h2><a href="#/agenda">Agenda</a></div>
+  ${upcoming.length ? `<div class="list">${upcoming.map(u => u.k === 't' ? taskRow(u.x) : evalRow(u.x)).join('')}</div>` : emptyBox('Todo al día', 'No tenés pendientes ni evaluaciones próximas.', `<button class="btn primary" data-action="new-task">${ic('plus')} Nuevo pendiente</button>`)}
+  ${inprog.length ? `<div class="section"><h2>En progreso</h2></div><div class="list">${inprog.slice(0,5).map(t => taskRow(t)).join('')}</div>` : ''}
+  </div><div>
+  <div class="section"><h2>Materias</h2><a href="#/materias">Ver todas</a></div>
+  ${subCards}
+  ${weekHTML}
+  ${done.length ? `<div class="section"><h2>Terminados recientemente</h2><a href="#/agenda" data-action="go-filter" data-f="terminado">Ver todos</a></div><div class="list">${done.slice(0,3).map(t => taskRow(t)).join('')}</div>` : ''}
+  </div></div>`;
+}
+function subjectCard(s) {
+  const st = gradeStats(s.id);
+  const ts = S.tasks.filter(t => t.subjectId === s.id); const td = ts.filter(t => t.status === 'terminado').length;
+  return `<a class="scard" href="#/materia/${s.id}/resumen" style="--c:${s.color}">
+    <span class="nm">${esc(s.name)}</span>
+    <span class="avg ${isNum(st.avg) ? gradeClass(st.avg) : 'dim'}">${isNum(st.avg) ? num(st.avg, 1) : '—'}<small>Promedio${isNum(st.avg) ? '' : ' (sin notas)'}</small></span>
+    <span class="minibar"><i style="width:${clamp(st.gradedWeight,0,100)}%"></i></span>
+    <span class="mini">Evaluado ${num(st.gradedWeight,1)}% · ${num(st.points,2)} pts<br>Pendientes ${td}/${ts.length} terminados</span>
+  </a>`;
+}
+
+/* ---------- Vista: Materias ---------- */
+let showArchivedSubjects = false;
+function viewMaterias() {
+  const sem = viewSem(); if (!sem) return noSemester('Materias');
+  const subs = subjectsOf(sem.id);
+  const arch = S.subjects.filter(s => s.semesterId === sem.id && s.archived);
+  const rows = subs.map(s => {
+    const st = gradeStats(s.id);
+    const extra = [s.teacher, s.schedule].filter(Boolean).join(' · ') || 'Tocá para ver notas, programa y pendientes';
+    return `<a class="srow" href="#/materia/${s.id}/resumen" style="--c:${s.color}"><span class="sw"></span><span class="info"><b>${esc(s.name)}</b><span>${esc(extra)}</span><span>Evaluado ${num(st.gradedWeight,1)}% · Acumulado ${num(st.points)} pts</span></span><span class="r"><b class="${gradeClass(st.avg)}">${isNum(st.avg) ? num(st.avg,1) : '—'}</b><small>Promedio</small></span></a>`;
+  }).join('');
+  return topbar('Materias', {actions:`<button class="icon-btn" data-action="new-subject" aria-label="Nueva materia">${ic('plus')}</button>`, sub:`${subs.length} ${subs.length === 1 ? 'materia activa' : 'materias activas'}`})
+  + archivedBanner(sem)
+  + (subs.length ? `<div style="margin-top:12px">${rows}</div>` : emptyBox('Sin materias activas', 'Agregá materias a este cuatrimestre.', ''))
+  + `<div class="btn-col"><button class="btn primary block" data-action="new-subject">${ic('plus')} Nueva materia</button></div>`
+  + (arch.length ? `<div class="section"><h2>Materias archivadas (${arch.length})</h2><button class="lnk" data-action="toggle-arch-subjects">${showArchivedSubjects ? 'Ocultar' : 'Mostrar'}</button></div>${showArchivedSubjects ? arch.map(s => `<a class="srow" href="#/materia/${s.id}/resumen" style="--c:${s.color};opacity:.8"><span class="sw"></span><span class="info"><b>${esc(s.name)}</b><span>Archivada · tocá para consultar o restaurar</span></span>${ic('right')}</a>`).join('') : ''}` : '');
+}
+
+/* ---------- Vista: Detalle de materia ---------- */
+const openWeeks = new Set(); const weeksInit = new Set();
+function viewMateria(id, tab) {
+  const s = subjectById(id);
+  if (!s) return topbar('Materia', {back:'#/materias'}) + emptyBox('No encontrada', 'Esta materia no existe o fue eliminada.');
+  tab = ['resumen','notas','programa','pendientes'].includes(tab) ? tab : 'resumen';
+  const sem = semById(s.semesterId);
+  const st = gradeStats(s.id);
+  const tabs = [['resumen','Resumen'],['notas','Notas'],['programa','Programa'],['pendientes','Pendientes']].map(([k,l]) => `<a href="#/materia/${s.id}/${k}" class="${tab === k ? 'on' : ''}">${l}</a>`).join('');
+  const head = `<header class="top"><div class="top-row"><a class="back" href="#/materias">${ic('left')}<span>Materias</span></a><div class="top-actions"><button class="icon-btn" data-action="edit-subject" data-id="${s.id}" aria-label="Editar materia">${ic('edit')}</button></div></div></header>
+  <div class="subhead" style="--c:${s.color}"><div class="eyebrow" style="color:${s.color}">${esc(sem ? sem.name : '')}${s.archived ? ' · Archivada' : ''}</div><h1 class="title" style="margin-top:4px">${esc(s.name)}</h1>
+  <div class="hero-row" style="margin-top:12px"><div><div class="big ${gradeClass(st.avg)}" style="font-size:48px">${isNum(st.avg) ? num(st.avg,1) : '—'}</div><div class="muted small">Promedio de lo calificado</div></div><div class="hero-side" style="color:var(--muted)"><b style="color:var(--text)">${num(st.points)}<span style="font-size:15px;color:var(--muted)"> /100</span></b>puntos acumulados</div></div></div>
+  ${s.archived ? `<div class="banner warn">${ic('archive')}<div><b>Materia archivada</b>Sus datos se conservan para consulta.<div class="acts"><button data-action="unarchive-subject" data-id="${s.id}">Restaurar materia</button><button data-action="delete-subject" data-id="${s.id}" style="color:var(--danger)">Eliminar definitivamente</button></div></div></div>` : ''}
+  <nav class="tabs">${tabs}</nav>`;
+  let body = '';
+  if (tab === 'resumen') body = materiaResumen(s, st, sem);
+  if (tab === 'notas') body = materiaNotas(s, st);
+  if (tab === 'programa') body = materiaPrograma(s, sem);
+  if (tab === 'pendientes') body = materiaPendientes(s);
+  return head + body;
+}
+function materiaResumen(s, st, sem) {
+  const ts = S.tasks.filter(t => t.subjectId === s.id);
+  const open = ts.filter(t => t.status !== 'terminado').sort(byDue);
+  const link = s.link ? (/^https?:\/\//i.test(s.link) ? s.link : 'https://' + s.link) : '';
+  const kv = [['Docente', s.teacher], ['Aula', s.room], ['Horario', s.schedule]].map(([k,v]) => `<div><span>${k}</span><b>${v ? esc(v) : '<span class="dim">—</span>'}</b></div>`).join('')
+    + `<div><span>Enlace de clase</span><b>${link ? `<a href="${esc(link)}" target="_blank" rel="noopener">${ic('link')} Abrir</a>` : '<span class="dim">—</span>'}</b></div>`;
+  const w = sem ? inWeeks(currentWeek(sem)) : null;
+  const wItems = w ? S.weekItems.filter(x => x.subjectId === s.id && x.week === w) : [];
+  return `<div class="section"><h2>Avance</h2></div>
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-n">${num(st.gradedWeight,1)}<small>%</small></div><div class="kpi-l">Curso evaluado</div></div>
+    <div class="kpi"><div class="kpi-n">${ts.filter(t => t.status === 'terminado').length}<small>/${ts.length}</small></div><div class="kpi-l">Pendientes terminados</div></div>
+    <div class="kpi"><div class="kpi-n">${open.filter(t => flag(t) === 'overdue').length}</div><div class="kpi-l">Vencidos</div></div>
+  </div>
+  ${w ? `<div class="section"><h2>Esta semana · ${w}</h2><a href="#/materia/${s.id}/programa">Programa</a></div>${wItems.length ? `<div class="card">${wItems.map(x => weekItemRow(x)).join('')}</div>` : `<div class="dayempty">Nada cargado para la semana ${w}.</div>`}` : ''}
+  <div class="section"><h2>Próximos pendientes</h2><a href="#/materia/${s.id}/pendientes">Ver todos</a></div>
+  ${open.length ? `<div class="list">${open.slice(0,4).map(t => taskRow(t, {showSubject:false})).join('')}</div>` : `<div class="dayempty">Sin pendientes abiertos.</div>`}
+  <div class="section"><h2>Información</h2><button class="lnk" data-action="edit-subject" data-id="${s.id}">Editar</button></div>
+  <div class="card"><div class="kv">${kv}</div></div>
+  ${s.notes ? `<div class="section"><h2>Notas generales</h2></div><div class="card notes-box">${esc(s.notes)}</div>` : ''}
+  ${!s.archived ? `<div class="btn-col"><button class="btn ghost" data-action="archive-subject" data-id="${s.id}">${ic('archive')} Archivar materia</button></div>` : ''}`;
+}
+function materiaNotas(s, st) {
+  const evs = st.evs.slice().sort((a,b) => (evalWeek(a)||99) - (evalWeek(b)||99) || (a.date||'').localeCompare(b.date||''));
+  const lost = Math.max(0, st.gradedWeight - st.points);
+  const pendW = Math.max(0, Math.min(st.pendingWeight, 100 - st.gradedWeight));
+  const unassigned = Math.max(0, 100 - st.gradedWeight - pendW);
+  let need = '';
+  if (st.gradedWeight >= 100 - 1e-9) need = `<div class="hint ${st.points >= st.pass ? 'ok' : 'danger'}">Curso evaluado al 100%. Nota final: <b>${num(st.points)}</b>.</div>`;
+  else if (st.count) {
+    if (st.needed <= 0) need = `<div class="hint ok">Con lo acumulado ya superás la nota mínima de <b>${num(st.pass)}</b>.</div>`;
+    else if (st.needed > 100) need = `<div class="hint danger">Aun con 100 en el ${num(st.remaining,1)}% restante no se alcanza ${num(st.pass)} (máximo posible: <b>${num(st.points + st.remaining)}</b>).</div>`;
+    else need = `<div class="hint">Para llegar a <b>${num(st.pass)}</b> necesitás promediar <b>${num(st.needed,1)}</b> en el ${num(st.remaining,1)}% que falta.</div>`;
+  }
+  return `<div class="section"><h2>Resumen de notas</h2></div>
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-n">${num(st.points)}<small>/100</small></div><div class="kpi-l">Puntos acumulados</div><div class="kpi-s">sobre el 100% del curso</div></div>
+    <div class="kpi"><div class="kpi-n ${gradeClass(st.avg)}">${isNum(st.avg) ? num(st.avg,1) : '—'}</div><div class="kpi-l">Promedio calificado</div><div class="kpi-s">sobre ${num(st.gradedWeight,1)}% con nota</div></div>
+    <div class="kpi"><div class="kpi-n">${num(st.remaining,1)}<small>%</small></div><div class="kpi-l">Falta por evaluar</div><div class="kpi-s">${st.gradedCount}/${st.count} calificadas</div></div>
+  </div>
+  <div class="card" style="margin-top:10px">
+    <div class="stackbar" style="margin-top:0" role="img" aria-label="Distribución del 100% del curso">
+      <i style="width:${clamp(st.points,0,100)}%;background:var(--ok)"></i><i style="width:${clamp(lost,0,100)}%;background:var(--danger)"></i><i style="width:${pendW}%;background:var(--warn);opacity:.55"></i><i style="width:${unassigned}%;background:transparent"></i>
+    </div>
+    <div class="legend"><span style="--c:var(--ok)">Obtenido ${num(st.points)}</span><span style="--c:var(--danger)">Perdido ${num(lost)}</span><span style="--c:var(--warn)">Registrado sin nota ${num(pendW,1)}%</span><span style="--c:var(--card2)">Sin registrar ${num(unassigned,1)}%</span></div>
+  </div>
+  ${st.over ? `<div class="banner danger">${ic('alert')}<div><b>Los porcentajes suman ${num(st.totalWeight)}%</b>El curso vale 100%. Revisá el valor de las evaluaciones.</div></div>` : ''}
+  <div style="margin-top:12px">${need}</div>
+  <div class="section"><h2>Evaluaciones (${num(st.totalWeight)}% asignado)</h2><button class="lnk" data-action="new-eval" data-subject="${s.id}">+ Agregar</button></div>
+  ${evs.length ? `<div class="list">${evs.map(e => evalRow(e, {showSubject:false})).join('')}</div>` : emptyBox('Sin evaluaciones', 'Registrá cada evaluación con su porcentaje. Las que no tengan nota no cuentan como cero.', `<button class="btn primary" data-action="new-eval" data-subject="${s.id}">${ic('plus')} Nueva evaluación</button>`)}
+  ${evs.length ? `<div class="btn-col"><button class="btn primary block" data-action="new-eval" data-subject="${s.id}">${ic('plus')} Nueva evaluación</button></div>` : ''}
+  <p class="dim small" style="margin-top:16px">Puntos = porcentaje × calificación ÷ 100. Ej.: 5% con nota 100 = 5 pts; con nota 50 = 2,5 pts.</p>`;
+}
+function weekItemRow(x, showSubject=false) {
+  const s = subjectById(x.subjectId);
+  return `<div class="witem ${x.done ? 'done' : ''}"><button class="wchk ${x.done ? 'on' : ''}" data-action="toggle-witem" data-id="${x.id}" aria-label="Marcar como visto">${ic('check')}</button><button class="wbody" data-action="edit-witem" data-id="${x.id}"><span class="ttag ${x.type}">${TYPES[x.type] || 'Nota'}</span>${showSubject && s ? ` <span class="ttag" style="color:${s.color}">${esc(s.name)}</span>` : ''}<b>${esc(x.title)}</b>${x.detail ? `<span class="wd">${esc(x.detail)}</span>` : ''}</button></div>`;
+}
+function materiaPrograma(s, sem) {
+  if (!sem) return '';
+  const cw = currentWeek(sem);
+  if (!weeksInit.has(s.id)) { weeksInit.add(s.id); if (inWeeks(cw)) openWeeks.add(s.id + ':' + cw); }
+  let html = `<p class="muted small" style="margin:12px 2px">Tocá una semana para ver o agregar temas, lecturas, clases, exámenes, tareas y notas.</p>`;
+  for (let n = 1; n <= WEEKS; n++) {
+    const [a,b] = weekRange(sem, n);
+    const items = S.weekItems.filter(x => x.subjectId === s.id && x.week === n).sort((p,q) => Object.keys(TYPES).indexOf(p.type) - Object.keys(TYPES).indexOf(q.type));
+    const ts = S.tasks.filter(t => t.subjectId === s.id && taskWeek(t) === n).sort(byDue);
+    const es = S.evaluations.filter(e => e.subjectId === s.id && evalWeek(e) === n);
+    const state = n === cw ? 'current' : n < cw ? 'past' : 'future';
+    const key = s.id + ':' + n; const open = openWeeks.has(key);
+    const counts = [items.length && `${items.length} contenido${items.length > 1 ? 's' : ''}`, ts.length && `${ts.length} pendiente${ts.length > 1 ? 's' : ''}`, es.length && `${es.length} evaluaci${es.length > 1 ? 'ones' : 'ón'}`].filter(Boolean).join(' · ');
+    html += `<div class="week ${state} ${open ? 'open' : ''}" id="wk-${n}">
+      <button class="wk-h" data-action="toggle-week" data-key="${key}" aria-expanded="${open}"><span class="wk-n">${n}</span><span class="wk-t"><b>Semana ${n}${state === 'current' ? ' · actual' : ''}</b><span>${rangeTxt(a,b)}${counts ? ' · ' + counts : ''}</span></span>${state === 'past' ? `<span class="badge ok">Pasada</span>` : state === 'current' ? `<span class="badge accent">Actual</span>` : ''}${ic('down','chev')}</button>
+      <div class="wk-b">
+        ${items.length ? items.map(x => weekItemRow(x)).join('') : `<div class="dim small">Sin contenidos cargados.</div>`}
+        ${ts.length ? `<div class="wk-sub">Pendientes</div><div class="list">${ts.map(t => taskRow(t, {showSubject:false})).join('')}</div>` : ''}
+        ${es.length ? `<div class="wk-sub">Evaluaciones</div><div class="list">${es.map(e => evalRow(e, {showSubject:false})).join('')}</div>` : ''}
+        <div class="wk-acts"><button class="chipbtn" data-action="new-witem" data-subject="${s.id}" data-week="${n}">${ic('plus')} Contenido</button><button class="chipbtn" data-action="new-task" data-subject="${s.id}" data-week="${n}">${ic('plus')} Pendiente</button><button class="chipbtn" data-action="new-eval" data-subject="${s.id}" data-week="${n}">${ic('plus')} Evaluación</button></div>
+      </div></div>`;
+  }
+  return html;
+}
+function materiaPendientes(s) {
+  const ts = S.tasks.filter(t => t.subjectId === s.id);
+  const open = ts.filter(t => t.status !== 'terminado').sort(byDue);
+  const done = ts.filter(t => t.status === 'terminado').sort(byDue);
+  return `<div class="section"><h2>Abiertos (${open.length})</h2><button class="lnk" data-action="new-task" data-subject="${s.id}">+ Agregar</button></div>
+  ${open.length ? `<div class="list">${open.map(t => taskRow(t, {showSubject:false})).join('')}</div>` : emptyBox('Sin pendientes abiertos', 'Agregá tareas, lecturas o entregas de esta materia.', `<button class="btn primary" data-action="new-task" data-subject="${s.id}">${ic('plus')} Nuevo pendiente</button>`)}
+  ${done.length ? `<div class="section"><h2>Terminados (${done.length})</h2></div><div class="list">${done.map(t => taskRow(t, {showSubject:false})).join('')}</div>` : ''}`;
+}
+
+/* ---------- Vista: Agenda ---------- */
+let agendaDate = todayISO();
+function itemsOn(semId, d) {
+  return {ts: semTasks(semId).filter(t => t.date === d).sort(byDue), es: semEvals(semId).filter(e => e.date === d)};
+}
+function dayList(semId, d, {compact=false} = {}) {
+  const {ts, es} = itemsOn(semId, d);
+  if (!ts.length && !es.length) return `<div class="dayempty">${compact ? 'Libre' : 'Nada programado para este día.'}</div>`;
+  return `<div class="list">${ts.map(t => taskRow(t, {showDate:false})).join('')}${es.map(e => evalRow(e)).join('')}</div>`;
+}
+function viewAgenda() {
+  const sem = viewSem(); if (!sem) return noSemester('Agenda');
+  const mode = S.ui.agendaMode || 'semana';
+  const today = todayISO();
+  const seg = `<div class="seg-nav" role="tablist">${[['dia','Día'],['semana','Semana'],['mes','Mes'],['lista','Lista']].map(([k,l]) => `<button role="tab" aria-selected="${mode === k}" class="${mode === k ? 'on' : ''}" data-action="agenda-mode" data-mode="${k}">${l}</button>`).join('')}</div>`;
+  let body = '';
+  if (mode === 'dia') {
+    const d = agendaDate; const w = inWeeks(weekForDate(sem, d));
+    body = navBar(cap1(fmtLong(d)), (diffDays(today, d) === 0 ? 'Hoy' : '') + (w ? (diffDays(today,d) === 0 ? ' · ' : '') + 'Semana ' + w : ''), -1, 1, 'day');
+    if (d === today) {
+      const od = semTasks(sem.id).filter(t => flag(t) === 'overdue' && t.date < today).sort(byDue);
+      if (od.length) body += `<div class="dayblk"><h3 style="color:var(--danger)">Vencidos de días anteriores<span class="cnt">${od.length}</span></h3><div class="list">${od.map(t => taskRow(t)).join('')}</div></div>`;
+    }
+    body += `<div class="dayblk"><h3>Para este día</h3>${dayList(sem.id, d)}</div><div class="btn-col"><button class="btn block" data-action="new-task" data-date="${d}">${ic('plus')} Pendiente para este día</button></div>`;
+  } else if (mode === 'semana') {
+    const mon = mondayOf(agendaDate); const sun = addDays(mon, 6);
+    const w = inWeeks(weekForDate(sem, mon)) || inWeeks(weekForDate(sem, sun));
+    body = navBar(rangeTxt(mon, sun), w ? 'Semana ' + w + ' del cuatrimestre' : 'Fuera del cuatrimestre', -7, 7, 'week');
+    for (let i = 0; i < 7; i++) {
+      const d = addDays(mon, i); const {ts, es} = itemsOn(sem.id, d);
+      body += `<div class="dayblk ${d === today ? 'is-today' : ''}"><h3>${esc(cap1(fmtD(d, {weekday:'long', day:'numeric', month:'short'}).replace(/\./g,'')))}${d === today ? ' · hoy' : ''}<span class="cnt">${ts.length + es.length || ''}</span></h3>${dayList(sem.id, d, {compact:true})}</div>`;
+    }
+  } else if (mode === 'mes') {
+    const first = agendaDate.slice(0, 8) + '01';
+    const firstD = parseD(first);
+    const daysIn = new Date(firstD.getFullYear(), firstD.getMonth() + 1, 0).getDate();
+    const start = mondayOf(first);
+    const totalCells = Math.ceil((diffDays(start, first) + daysIn) / 7) * 7;
+    body = navBar(cap1(fmtD(first, {month:'long', year:'numeric'})), '', -1, 1, 'month');
+    let grid = ['L','K','M','J','V','S','D'].map(x => `<div class="dow">${x}</div>`).join('');
+    const ts = semTasks(sem.id), es = semEvals(sem.id);
+    for (let i = 0; i < totalCells; i++) {
+      const d = addDays(start, i);
+      const out = d.slice(0,7) !== first.slice(0,7);
+      const dayT = ts.filter(t => t.date === d && t.status !== 'terminado');
+      const dayE = es.filter(e => e.date === d);
+      const dots = [...dayT.map(t => `<i class="${flag(t) === 'overdue' ? 'od' : ''}" style="--c:${(subjectById(t.subjectId)||{}).color || 'var(--muted)'}"></i>`), ...dayE.map(e => `<i style="--c:${(subjectById(e.subjectId)||{}).color || 'var(--muted)'};border-radius:2px"></i>`)].slice(0, 6).join('');
+      grid += `<button class="mcell ${out ? 'out' : ''} ${d === today ? 'today' : ''} ${d === agendaDate ? 'sel' : ''}" data-action="agenda-day" data-date="${d}" aria-label="${esc(fmtLong(d))}${dayT.length + dayE.length ? ', ' + (dayT.length + dayE.length) + ' elementos' : ''}"><span class="d">${parseD(d).getDate()}</span><span class="dots">${dots}</span></button>`;
+    }
+    body += `<div class="month">${grid}</div><p class="dim small" style="margin:8px 2px 0">● pendiente abierto &nbsp; ■ evaluación &nbsp; contorno rojo = vencido</p>
+    <div class="dayblk"><h3>${esc(cap1(fmtLong(agendaDate)))}</h3>${dayList(sem.id, agendaDate)}</div>`;
+  } else {
+    body = agendaLista(sem);
+  }
+  return topbar('Agenda') + archivedBanner(sem) + seg + body;
+}
+function navBar(label, sub, back, fwd, unit) {
+  return `<div class="datenav"><button class="icon-btn" data-action="agenda-nav" data-n="${back}" data-unit="${unit}" aria-label="Anterior">${ic('left')}</button><div class="lbl"><b>${esc(label)}</b><span>${esc(sub)}</span></div><button class="icon-btn" data-action="agenda-nav" data-n="${fwd}" data-unit="${unit}" aria-label="Siguiente">${ic('right')}</button></div><div style="text-align:center;margin:-4px 0 4px"><button class="today-btn" data-action="agenda-today">Ir a hoy</button></div>`;
+}
+function filterTasks(sem) {
+  const f = S.ui.filters;
+  let ts = semTasks(sem.id);
+  if (f.subject === '_none') ts = ts.filter(t => !t.subjectId); else if (f.subject) ts = ts.filter(t => t.subjectId === f.subject);
+  if (f.priority) ts = ts.filter(t => t.priority === f.priority);
+  if (f.week === '_none') ts = ts.filter(t => !taskWeek(t)); else if (f.week) ts = ts.filter(t => taskWeek(t) === Number(f.week));
+  switch (f.status) {
+    case 'activos': ts = ts.filter(t => t.status !== 'terminado'); break;
+    case 'vencidos': ts = ts.filter(t => flag(t) === 'overdue'); break;
+    case 'proximos': ts = ts.filter(t => flag(t) === 'soon'); break;
+    case 'pendiente': case 'progreso': case 'terminado': ts = ts.filter(t => t.status === f.status); break;
+  }
+  const subName = t => (subjectById(t.subjectId) || {name:'~'}).name;
+  const sorters = {
+    fecha: byDue,
+    prioridad: (a,b) => PRIO_RANK[a.priority] - PRIO_RANK[b.priority] || byDue(a,b),
+    materia: (a,b) => subName(a).localeCompare(subName(b), 'es') || byDue(a,b),
+    estado: (a,b) => STATUS_RANK[a.status] - STATUS_RANK[b.status] || byDue(a,b),
+    semana: (a,b) => (taskWeek(a) || 99) - (taskWeek(b) || 99) || byDue(a,b)
+  };
+  return ts.sort(sorters[f.sort] || byDue);
+}
+function agendaLista(sem) {
+  const f = S.ui.filters;
+  const subs = subjectsOf(sem.id, true);
+  const opt = (v, l, cur) => `<option value="${v}" ${String(cur) === String(v) ? 'selected' : ''}>${esc(l)}</option>`;
+  const chips = [['activos','Abiertos'],['vencidos','Vencidos'],['proximos','Próximos'],['pendiente','Pendientes'],['progreso','En progreso'],['terminado','Terminados'],['todos','Todos']]
+    .map(([k,l]) => `<button class="chipbtn ${f.status === k ? 'on' : ''}" data-action="filter-status" data-v="${k}">${l}</button>`).join('');
+  const ts = filterTasks(sem);
+  const groupKey = f.sort === 'materia' ? t => (subjectById(t.subjectId)||{name:'General'}).name : f.sort === 'semana' ? t => taskWeek(t) ? 'Semana ' + taskWeek(t) : 'Sin semana' : f.sort === 'estado' ? t => STATUSES[t.status] : f.sort === 'prioridad' ? t => 'Prioridad ' + PRIORITIES[t.priority].toLowerCase() : null;
+  let list = '';
+  if (!ts.length) list = emptyBox('Sin resultados', 'No hay pendientes con estos filtros.', `<button class="btn" data-action="filter-reset">Quitar filtros</button>`);
+  else if (groupKey) { let last = null; list = ts.map(t => { const g = groupKey(t); const h = g !== last ? `<div class="wk-sub" style="margin-top:${last === null ? 0 : 16}px">${esc(g)}</div>` : ''; last = g; return h + taskRow(t); }).join(''); list = `<div class="list">${list}</div>`; }
+  else list = `<div class="list">${ts.map(t => taskRow(t)).join('')}</div>`;
+  return `<div class="chips">${chips}</div>
+  <div class="filters">
+    <label class="fsel">Materia<select class="input" data-filter="subject">${opt('','Todas',f.subject)}${opt('_none','General (sin materia)',f.subject)}${subs.map(s => opt(s.id, s.name + (s.archived ? ' (archivada)' : ''), f.subject)).join('')}</select></label>
+    <label class="fsel">Prioridad<select class="input" data-filter="priority">${opt('','Todas',f.priority)}${Object.entries(PRIORITIES).map(([k,l]) => opt(k,l,f.priority)).join('')}</select></label>
+    <label class="fsel">Semana<select class="input" data-filter="week">${opt('','Todas',f.week)}${Array.from({length:WEEKS},(_,i) => opt(i+1,'Semana '+(i+1),f.week)).join('')}${opt('_none','Sin semana',f.week)}</select></label>
+    <label class="fsel">Ordenar por<select class="input" data-filter="sort">${[['fecha','Fecha'],['prioridad','Prioridad'],['materia','Materia'],['estado','Estado'],['semana','Semana']].map(([k,l]) => opt(k,l,f.sort)).join('')}</select></label>
+  </div>
+  <div class="count">${ts.length} ${ts.length === 1 ? 'resultado' : 'resultados'}</div>${list}`;
+}
+
+/* ---------- Vista: Ajustes ---------- */
+function isIOS() { return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); }
+function isStandalone() { return (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true; }
+function swCapable() { return 'serviceWorker' in navigator && (location.protocol === 'https:' || ['localhost','127.0.0.1'].includes(location.hostname)); }
+function notifStatus() {
+  const supported = 'Notification' in window;
+  const perm = supported ? Notification.permission : 'unsupported';
+  if (location.protocol === 'file:') return {lvl:'warn', t:'Abriste la app como archivo local', d:'Las notificaciones, la instalación y el modo sin conexión solo funcionan si la app está publicada en un sitio HTTPS. Los avisos se muestran dentro de la app.', can:false};
+  if (isIOS() && !isStandalone()) return {lvl:'info', t:'Instalala para activar notificaciones', d:'En iPhone, Safari solo permite notificaciones web a apps agregadas a la pantalla de inicio (iOS 16.4 o posterior). Instalala con los pasos de abajo, ábrela desde su ícono y volvé a esta pantalla.', can:false};
+  if (!supported) return {lvl:'warn', t:'Este navegador no admite notificaciones', d:'Seguirás viendo los recordatorios dentro de la app. Para avisos del sistema usá “Exportar al Calendario”.', can:false};
+  if (perm === 'denied') return {lvl:'danger', t:'Notificaciones bloqueadas', d: isIOS() ? 'Activalas en Ajustes del iPhone → Notificaciones → Cuatri → Permitir notificaciones. Luego volvé a abrir la app.' : 'Desbloquealas en la configuración del sitio de tu navegador (ícono junto a la dirección).', can:false};
+  if (perm === 'granted' && S.settings.notifications) return {lvl:'ok', t:'Notificaciones activadas', d:'Los avisos llegan mientras la app está abierta o fue usada recientemente. Con la app cerrada, iOS no permite que una app web programe avisos locales sin un servidor push; para avisos garantizados exportá tus pendientes al Calendario.', can:false, test:true};
+  return {lvl:'info', t:'Notificaciones disponibles', d:'Tocá “Activar notificaciones” y aceptá el permiso.', can:true};
+}
+function viewAjustes() {
+  const vs = viewSem();
+  const sems = S.semesters.slice().sort((a,b) => (a.archived - b.archived) || b.start.localeCompare(a.start));
+  const semRows = sems.map(s => `<button class="set-row" data-action="edit-sem" data-id="${s.id}"><span class="live-dot ${s.archived ? 'arch' : ''}"></span><span class="grow"><b>${esc(s.name)}</b><span>${esc(fmtDMY(s.start))} – ${esc(fmtDMY(s.end))} · ${subjectsOf(s.id).length} materias${s.archived ? ' · Archivado' : ''}${vs && vs.id === s.id ? ' · Viendo' : ''}</span></span>${ic('right')}</button>`).join('');
+  const ns = notifStatus();
+  const offs = S.settings.reminderOffsets;
+  const ios = isIOS();
+  const canShareFiles = (() => { try { return !!(navigator.canShare && navigator.canShare({files:[new File(['x'], 'x.json', {type:'application/json'})]})); } catch (e) { return false; } })();
+  const installed = isStandalone();
+  const thr = S.settings.theme;
+  return topbar('Ajustes') + `
+  <div class="section"><h2>Cuatrimestres</h2><button class="lnk" data-action="new-sem">+ Nuevo</button></div>
+  <div class="set-group">${semRows || `<div class="set-body muted">No hay cuatrimestres.</div>`}</div>
+  ${vs ? `<div class="section"><h2>Semana actual</h2></div><div class="set-group"><button class="set-row" data-action="adjust-week"><span class="grow"><b>${inWeeks(currentWeek(vs)) ? 'Semana ' + currentWeek(vs) + ' de ' + WEEKS : currentWeek(vs) < 1 ? 'Aún no inicia' : 'Finalizado'}</b><span>${vs.weekOffset ? 'Corregida manualmente (' + (vs.weekOffset > 0 ? '+' : '') + vs.weekOffset + ' respecto al cálculo)' : 'Calculada desde el inicio: ' + esc(fmtDMY(vs.start))}</span></span>${ic('edit')}</button></div>` : ''}
+
+  <div class="section"><h2>Recordatorios</h2></div>
+  <div class="set-group"><div class="set-body">
+    <span class="status-pill badge ${ns.lvl}">${esc(ns.t)}</span>
+    <p class="muted small" style="margin:10px 0 0">${esc(ns.d)}</p>
+    <div class="btn-col">
+      ${ns.can ? `<button class="btn primary" data-action="notif-enable">${ic('bell')} Activar notificaciones</button>` : ''}
+      ${ns.test ? `<button class="btn" data-action="notif-test">${ic('bell')} Enviar notificación de prueba</button><button class="btn ghost" data-action="notif-disable">Desactivar notificaciones</button>` : ''}
+      <button class="btn" data-action="export-ics">${ic('cal')} Exportar pendientes al Calendario (.ics)</button>
+      ${canShareFiles ? `<button class="btn ghost" data-action="export-ics-share">${ic('share')} Compartir el .ics (Mail, Archivos…)</button>` : ''}
+    </div>
+    <p class="dim small" style="margin:10px 0 0">El archivo .ics incluye los pendientes abiertos con fecha de este cuatrimestre y sus alarmas. Una vez agregados al Calendario del iPhone, los avisos los da el propio iPhone aunque la app esté cerrada. Si iOS no te ofrece “Agregar” al abrirlo, usá “Compartir el .ics”, envíatelo por Mail y tocá el adjunto. Si cambiás fechas, volvé a exportarlo (los eventos se actualizan porque conservan el mismo identificador).</p>
+  </div>
+  <div class="set-body" style="border-top:1px solid var(--line)">
+    <div class="flabel" style="margin-bottom:8px">Recordatorios predeterminados para pendientes nuevos</div>
+    <div class="chipset">${REMINDER_OPTS.map(([m,l]) => `<label><input type="checkbox" data-setting="reminder" value="${m}" ${offs.includes(m) ? 'checked' : ''}><span>${l}</span></label>`).join('')}</div>
+    <p class="dim small" style="margin:10px 0 0">Si un pendiente no tiene hora, los recordatorios se calculan desde las ${REF_HOUR_NO_TIME}:00 de ese día. Siempre verás los avisos dentro de la app en Inicio.</p>
+  </div></div>
+
+  <div class="section"><h2>Instalar en iPhone</h2></div>
+  <div class="set-group"><div class="set-body">
+    ${installed ? `<span class="status-pill badge ok">Instalada en pantalla de inicio</span><p class="muted small" style="margin:10px 0 0">Funciona sin conexión después de haberla abierto una vez con internet.</p>` :
+    `<span class="status-pill badge ${swCapable() ? 'info' : 'warn'}">${swCapable() ? 'Lista para instalar' : 'Requiere publicarla en HTTPS'}</span>
+    <ol class="steps"><li>Abrí la dirección de la app en <b>Safari</b>.</li><li>Tocá <b>Compartir</b> (cuadro con flecha hacia arriba). En iOS 26 o posterior puede estar dentro del botón <b>···</b> de la barra.</li><li>Elegí <b>Agregar a pantalla de inicio</b> (si no aparece, tocá <b>Ver más</b>).</li><li>Si aparece la opción <b>Abrir como app web</b>, dejala activada. Tocá <b>Agregar</b>.</li><li>Abrí <b>Cuatri</b> desde el ícono. Desde ahí funciona sin conexión.</li></ol>`}
+  </div></div>
+
+  <div class="section"><h2>Preferencias</h2></div>
+  <div class="set-group"><div class="set-body">
+    <div class="field"><span>Tema</span><div class="seg">${[['dark','Oscuro'],['light','Claro'],['system','Automático']].map(([k,l]) => `<label><input type="radio" name="theme" data-setting="theme" value="${k}" ${thr === k ? 'checked' : ''}><span>${l}</span></label>`).join('')}</div></div>
+    <div class="grid2">
+      <label class="field"><span>Nota mínima para aprobar</span><input class="input" inputmode="decimal" data-setting="passGrade" value="${num(S.settings.passGrade)}"></label>
+      <label class="field"><span>“Próximo a vencer”</span><select class="input" data-setting="soonDays">${[1,2,3,5,7].map(n => `<option value="${n}" ${S.settings.soonDays === n ? 'selected' : ''}>${n} ${n === 1 ? 'día' : 'días'} antes</option>`).join('')}</select></label>
+    </div>
+  </div></div>
+
+  <div class="section"><h2>Respaldo</h2></div>
+  <div class="set-group"><div class="set-body">
+    <p class="muted small" style="margin:0">El respaldo es un archivo .json con todos tus cuatrimestres, materias, notas, pendientes y programas (incluidos los archivados).</p>
+    <div class="btn-col">
+      ${canShareFiles ? `<button class="btn primary" data-action="export-share">${ic('share')} Guardar respaldo en Archivos / Compartir</button>` : ''}
+      <button class="btn ${canShareFiles ? '' : 'primary'}" data-action="export-download">${ic('download')} Descargar respaldo (.json)</button>
+      <button class="btn" data-action="import">${ic('upload')} Importar respaldo</button>
+    </div>
+    <p class="dim small" style="margin:10px 0 0">Último cambio guardado: ${esc(new Date(S.meta.updatedAt).toLocaleString('es-CR', {dateStyle:'medium', timeStyle:'short'}))}</p>
+  </div></div>
+
+  <div class="section"><h2>Almacenamiento</h2></div>
+  <div class="set-group"><div class="set-body">
+    <div class="banner info" style="margin-top:0">${ic('info')}<div><b>Tus datos viven solo en este dispositivo</b>Se guardan automáticamente en el almacenamiento local de este navegador. <b style="display:inline">No se sincronizan</b> entre el iPhone, la computadora u otros equipos. Para pasar datos de un equipo a otro, exportá un respaldo y importalo en el otro.</div></div>
+    <p class="muted small">La app instalada en la pantalla de inicio y Safari guardan datos por separado. ${ios ? 'Usá siempre la versión instalada y hacé respaldos periódicos; si borrás el ícono o los datos de sitios web de Safari, se pierden los datos.' : 'Si borrás los datos del navegador, se pierden los datos.'}</p>
+    <div class="btn-col"><button class="btn" data-action="persist">${ic('shield')} Pedir almacenamiento persistente</button></div>
+    <p class="dim small" id="storage-info" style="margin:10px 0 0">${storageOK ? 'Guardado automático activo.' : 'No se puede guardar en este modo (¿navegación privada?).'}</p>
+  </div></div>
+
+  <div class="section"><h2>Zona de riesgo</h2></div>
+  <div class="set-group"><div class="set-body">
+    <button class="btn danger block" data-action="clear-all">${ic('trash')} Borrar todos los datos</button>
+    <p class="dim small" style="margin:10px 0 0">Elimina cuatrimestres, materias, notas, pendientes y programas de este dispositivo. No se puede deshacer: exportá un respaldo antes.</p>
+  </div></div>
+  <p class="dim small" style="text-align:center;margin:24px 0 0">Cuatri v${APP_VERSION} · Sin cuentas ni servicios externos</p>`;
+}
+
+/* ---------- Render ---------- */
+let lastKey = null;
+function setTab(t) { $$('.tabbar a').forEach(a => a.classList.toggle('on', a.dataset.tab === t)); }
+function render() {
+  const r = route(); const key = curHash;
+  const sameView = key === lastKey; const y = window.scrollY;
+  let html = '';
+  switch (r.view) {
+    case 'materias': html = viewMaterias(); break;
+    case 'materia': html = viewMateria(r.id, r.sub); break;
+    case 'agenda': html = viewAgenda(); break;
+    case 'ajustes': html = viewAjustes(); break;
+    default: html = viewInicio();
+  }
+  $('#app').innerHTML = html;
+  setTab(r.view === 'materia' ? 'materias' : (['materias','agenda','ajustes'].includes(r.view) ? r.view : 'inicio'));
+  const v = ['materias','materia','agenda','ajustes'].includes(r.view) ? r.view : 'inicio';
+  $('#fab').hidden = !viewSem() || !['inicio','agenda','materia'].includes(v);
+  updateBadges();
+  if (sameView) window.scrollTo(0, y);
+  else {
+    window.scrollTo(0, 0);
+    if (r.view === 'materia' && r.sub === 'programa') { const c = $('.week.current'); if (c) setTimeout(() => c.scrollIntoView({block:'center'}), 30); }
+  }
+  lastKey = key;
+  if (r.view === 'ajustes') storageInfo();
+}
+function softRefresh() { if (!$('#sheet-root').classList.contains('open')) render(); }
+function updateBadges() {
+  const live = S.semesters.filter(s => !s.archived).map(s => s.id);
+  const n = S.tasks.filter(t => live.includes(t.semesterId) && flag(t) === 'overdue').length;
+  const b = $('#bdg-inicio'); b.hidden = !n; b.textContent = n > 99 ? '99+' : n;
+  const today = todayISO();
+  const badgeN = n + S.tasks.filter(t => live.includes(t.semesterId) && t.status !== 'terminado' && t.date === today && flag(t) !== 'overdue').length;
+  try { if ('setAppBadge' in navigator) { (badgeN ? navigator.setAppBadge(badgeN) : navigator.clearAppBadge()).catch(() => {}); } } catch (e) {}
+}
+function applyTheme() {
+  const t = S.settings.theme || 'dark';
+  document.documentElement.dataset.theme = t;
+  const dark = t === 'dark' || (t === 'system' && !matchMedia('(prefers-color-scheme: light)').matches);
+  $('meta[name=theme-color]').setAttribute('content', dark ? '#0A0D14' : '#0E1525');
+}
+
+/* ---------- UI: hoja, diálogo, toast ---------- */
+let sheetSubmit = null;
+function openSheet({title, body, submitText='Guardar', onSubmit=null, onOpen=null}) {
+  const root = $('#sheet-root');
+  root.innerHTML = `<div class="scrim" data-action="close-sheet"></div><form class="sheet" novalidate autocomplete="off"><div class="sheet-head"><button type="button" class="link" data-action="close-sheet">${onSubmit ? 'Cancelar' : 'Cerrar'}</button><h2>${esc(title)}</h2>${onSubmit ? `<button class="link strong" type="button" data-sheet-save>${esc(submitText)}</button>` : '<span></span>'}</div><div class="sheet-body">${body}</div></form>`;
+  sheetSubmit = onSubmit;
+  const form = root.querySelector('form');
+  // Guardar con clic directo (funciona aunque el entorno bloquee el envío de formularios) y con Enter en campos de texto.
+  const doSubmit = () => { if (!sheetSubmit) return; const ok = sheetSubmit(new FormData(form), form); if (ok !== false) closeSheet(); };
+  form.addEventListener('submit', e => { e.preventDefault(); doSubmit(); });
+  const saveBtn = form.querySelector('[data-sheet-save]'); if (saveBtn) saveBtn.addEventListener('click', e => { e.preventDefault(); doSubmit(); });
+  form.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.tagName === 'INPUT' && !['checkbox','radio','date','time'].includes(e.target.type)) { e.preventDefault(); doSubmit(); } });
+  document.body.classList.add('sheet-open');
+  requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add('open')));
+  if (onOpen) onOpen(form);
+}
+function closeSheet() {
+  const root = $('#sheet-root'); root.classList.remove('open'); document.body.classList.remove('sheet-open'); sheetSubmit = null;
+  setTimeout(() => { if (!root.classList.contains('open')) root.innerHTML = ''; }, 300);
+}
+function confirmDialog({title, message, confirmText='Confirmar', danger=false, requireText=''}) {
+  return new Promise(res => {
+    const root = $('#dialog-root');
+    root.innerHTML = `<div class="dialog"><h3>${esc(title)}</h3><p>${message}</p>${requireText ? `<label class="field"><span>Escribí <b>${esc(requireText)}</b> para confirmar</span><input class="input" id="dlg-input" autocapitalize="characters" autocomplete="off"></label>` : ''}<div class="btn-row" style="margin-top:4px"><button class="btn" id="dlg-no">Cancelar</button><button class="btn ${danger ? 'danger' : 'primary'}" id="dlg-yes" ${requireText ? 'disabled style="opacity:.45"' : ''}>${esc(confirmText)}</button></div></div>`;
+    root.classList.add('open');
+    const yes = $('#dlg-yes'), no = $('#dlg-no'), inp = $('#dlg-input');
+    const close = v => { root.classList.remove('open'); root.innerHTML = ''; root.onclick = null; res(v); };
+    if (inp) inp.addEventListener('input', () => { const ok = inp.value.trim().toUpperCase() === requireText; yes.disabled = !ok; yes.style.opacity = ok ? 1 : .45; });
+    yes.addEventListener('click', () => close(true)); no.addEventListener('click', () => close(false));
+    root.onclick = e => { if (e.target === root) close(false); };
+  });
+}
+function toast(msg, {type='', actionText='', action=null, ms=3200} = {}) {
+  const root = $('#toast-root'); while (root.children.length >= 1) root.firstChild.remove();
+  const el = document.createElement('div'); el.className = 'toast ' + type; el.setAttribute('role', 'status');
+  el.innerHTML = `<span class="t">${esc(msg)}</span>${actionText ? `<button>${esc(actionText)}</button>` : ''}`;
+  if (actionText) el.querySelector('button').addEventListener('click', () => { action && action(); el.remove(); });
+  root.appendChild(el);
+  setTimeout(() => el.remove(), ms);
+}
+let savedT;
+function flashSaved() { const p = $('#pill-saved'); p.classList.add('show'); clearTimeout(savedT); savedT = setTimeout(() => p.classList.remove('show'), 1200); }
+function onlineState() { $('#pill-off').classList.toggle('show', !navigator.onLine); }
+
+/* ---------- Formularios ---------- */
+const opt = (v, l, cur) => `<option value="${esc(v)}" ${String(cur ?? '') === String(v) ? 'selected' : ''}>${esc(l)}</option>`;
+function weekSelect(name, cur, autoTxt='Automática (según la fecha)') { return `<select class="input" name="${name}">${opt('', autoTxt, cur ?? '')}${Array.from({length:WEEKS}, (_, i) => opt(i+1, 'Semana ' + (i+1), cur ?? '')).join('')}</select>`; }
+function subjectOptions(semId, cur, {allowNone=false} = {}) {
+  const subs = S.subjects.filter(s => s.semesterId === semId && (!s.archived || s.id === cur));
+  return (allowNone ? opt('', 'General (sin materia)', cur || '') : '') + subs.map(s => opt(s.id, s.name, cur)).join('');
+}
+function fieldErr(form, name, msg) { const el = form.querySelector(`[name="${name}"]`); toast(msg, {type:'danger'}); if (el) el.focus(); return false; }
+
+function formTask(t, preset={}) {
+  const sem = t ? taskSem(t) : (preset.subjectId ? semOfSubject(preset.subjectId) : viewSem()); if (!sem) { toast('Primero creá un cuatrimestre.', {type:'danger'}); return; }
+  const isNew = !t;
+  const d = t || {title:'', description:'', subjectId:preset.subjectId || '', date:preset.date || '', time:'', priority:'media', status:'pendiente', week:preset.week ?? null, evaluationId:preset.evaluationId || '', reminders:S.settings.reminderOffsets.slice()};
+  const evOpts = sid => `${opt('', 'Ninguna', d.evaluationId || '')}${S.evaluations.filter(e => e.subjectId === sid).map(e => opt(e.id, `${e.name} (${num(e.weight)}%)`, d.evaluationId || '')).join('')}`;
+  const body = `
+    <label class="field"><span>Título</span><input class="input" name="title" value="${esc(d.title)}" placeholder="Ej.: Entregar informe de riesgos" required></label>
+    <label class="field"><span>Descripción</span><textarea class="input" name="description" placeholder="Detalles, instrucciones, enlaces…">${esc(d.description)}</textarea></label>
+    <label class="field"><span>Materia</span><select class="input" name="subjectId">${subjectOptions(sem.id, d.subjectId, {allowNone:true})}</select></label>
+    <div class="grid2"><label class="field"><span>Fecha</span><input class="input" type="date" name="date" value="${esc(d.date)}"></label><label class="field"><span>Hora (opcional)</span><input class="input" type="time" name="time" value="${esc(d.time)}"></label></div>
+    <label class="field"><span>Semana del cuatrimestre</span>${weekSelect('week', d.week)}<small id="wk-hint"></small></label>
+    <div class="field"><span>Prioridad</span><div class="seg">${Object.entries(PRIORITIES).map(([k,l]) => `<label><input type="radio" name="priority" value="${k}" ${d.priority === k ? 'checked' : ''}><span>${l}</span></label>`).join('')}</div></div>
+    <div class="field"><span>Estado</span><div class="seg">${Object.entries(STATUSES).map(([k,l]) => `<label><input type="radio" name="status" value="${k}" ${d.status === k ? 'checked' : ''}><span>${l}</span></label>`).join('')}</div></div>
+    <label class="field"><span>Evaluación relacionada</span><select class="input" name="evaluationId">${evOpts(d.subjectId)}</select></label>
+    <div class="field"><span>Recordatorios</span><div class="chipset">${REMINDER_OPTS.map(([m,l]) => `<label><input type="checkbox" name="rem" value="${m}" ${(d.reminders || []).includes(m) ? 'checked' : ''}><span>${l}</span></label>`).join('')}</div><small>Requieren fecha. Se muestran dentro de la app y, si están activadas, como notificación.</small></div>
+    ${!isNew ? `<div class="sheet-danger">${d.date ? `<button type="button" class="btn" data-action="task-ics" data-id="${t.id}">${ic('cal')} Agregar al Calendario (.ics)</button>` : ''}<button type="button" class="btn danger" data-action="delete-task" data-id="${t.id}">${ic('trash')} Eliminar pendiente</button></div>` : ''}`;
+  openSheet({title: isNew ? 'Nuevo pendiente' : 'Editar pendiente', body, onOpen: form => {
+    const F = form.elements; const subSel = F.subjectId, evSel = F.evaluationId, dateIn = F.date, hint = $('#wk-hint', form);
+    const upd = () => { const v = dateIn.value; const w = v ? inWeeks(weekForDate(sem, v)) : null; hint.textContent = v ? (w ? `Según la fecha corresponde a la semana ${w}.` : 'La fecha está fuera de las 15 semanas.') : ''; };
+    subSel.addEventListener('change', () => { d.evaluationId = ''; evSel.innerHTML = evOpts(subSel.value); });
+    dateIn.addEventListener('change', upd); upd();
+    if (isNew) setTimeout(() => F.title.focus(), 320);
+  }, onSubmit: (fd, form) => {
+    const title = (fd.get('title') || '').trim(); if (!title) return fieldErr(form, 'title', 'Escribí un título.');
+    const date = fd.get('date') || ''; const time = fd.get('time') || '';
+    if (time && !date) return fieldErr(form, 'date', 'Si ponés hora, indicá también la fecha.');
+    const wk = fd.get('week') ? Number(fd.get('week')) : null;
+    const sid = fd.get('subjectId') || '';
+    const obj = t || {id:uid(), createdAt:new Date().toISOString()};
+    const prevStatus = obj.status;
+    Object.assign(obj, {title, description:(fd.get('description') || '').trim(), subjectId:sid || null, semesterId: sid ? subjectById(sid).semesterId : sem.id, date, time, week:wk, priority:fd.get('priority') || 'media', status:fd.get('status') || 'pendiente', evaluationId:fd.get('evaluationId') || null, reminders:fd.getAll('rem').map(Number).sort((a,b) => b - a)});
+    if (obj.status === 'terminado' && prevStatus !== 'terminado') obj.completedAt = new Date().toISOString();
+    if (obj.status !== 'terminado') obj.completedAt = null;
+    commit(() => { if (isNew) S.tasks.push(obj); });
+    toast(isNew ? 'Pendiente creado' : 'Cambios guardados', {type:'ok'});
+    checkReminders();
+  }});
+}
+function formEval(e, preset={}) {
+  const sem = e ? semOfSubject(e.subjectId) : (preset.subjectId ? semOfSubject(preset.subjectId) : viewSem());
+  if (!sem) { toast('Primero creá un cuatrimestre.', {type:'danger'}); return; }
+  if (!subjectsOf(sem.id).length && !e) { toast('Primero agregá una materia.', {type:'danger'}); return; }
+  const isNew = !e;
+  const d = e || {name:'', subjectId:preset.subjectId || subjectsOf(sem.id)[0].id, week:preset.week ?? null, date:'', weight:null, grade:null, notes:''};
+  const body = `
+    <label class="field"><span>Nombre</span><input class="input" name="name" value="${esc(d.name)}" placeholder="Ej.: Tarea 1, Parcial, Proyecto final" required></label>
+    <label class="field"><span>Materia</span><select class="input" name="subjectId">${subjectOptions(sem.id, d.subjectId)}</select></label>
+    <div class="grid2"><label class="field"><span>Porcentaje del curso</span><input class="input" name="weight" inputmode="decimal" value="${isNum(d.weight) ? num(d.weight, 4) : ''}" placeholder="Ej.: 5"></label><label class="field"><span>Calificación (0–100)</span><input class="input" name="grade" inputmode="decimal" value="${isNum(d.grade) ? num(d.grade, 4) : ''}" placeholder="Sin calificar"></label></div>
+    <div class="hint" id="ev-hint">—</div>
+    <div class="grid2"><label class="field"><span>Fecha</span><input class="input" type="date" name="date" value="${esc(d.date || '')}"></label><label class="field"><span>Semana</span>${weekSelect('week', d.week, 'Automática')}</label></div>
+    <label class="field"><span>Notas</span><textarea class="input" name="notes" placeholder="Rúbrica, temas, observaciones…">${esc(d.notes || '')}</textarea></label>
+    <p class="dim small" style="margin:-4px 0 12px">Dejá la calificación vacía si aún no tenés nota: no se cuenta como cero.</p>
+    ${!isNew ? `<div class="sheet-danger"><button type="button" class="btn" data-action="new-task" data-subject="${e.subjectId}" data-eval="${e.id}" data-week="${evalWeek(e) || ''}" data-date="${e.date || ''}">${ic('plus')} Crear pendiente relacionado</button><button type="button" class="btn danger" data-action="delete-eval" data-id="${e.id}">${ic('trash')} Eliminar evaluación</button></div>` : ''}`;
+  openSheet({title: isNew ? 'Nueva evaluación' : 'Editar evaluación', body, onOpen: form => {
+    const upd = () => {
+      const F = form.elements; const w = parseNum(F.weight.value), g = parseNum(F.grade.value), sid = F.subjectId.value;
+      const others = sum(S.evaluations.filter(x => x.subjectId === sid && (!e || x.id !== e.id)), x => x.weight || 0);
+      const total = others + (isNum(w) ? w : 0);
+      let h = '';
+      if (isNum(w) && isNum(g)) h = `Aporta <b>${num(w * g / 100)}</b> puntos de ${num(w)} posibles.`;
+      else if (isNum(w)) h = `Vale ${num(w)}% del curso. Sin nota aún: no afecta el promedio.`;
+      else h = 'Indicá cuánto vale en el curso.';
+      h += `<br>Total asignado en la materia: <b>${num(total)}%</b>`;
+      const el = $('#ev-hint', form); el.innerHTML = h; el.className = 'hint' + (total > 100.0001 ? ' danger' : '');
+      if (total > 100.0001) el.innerHTML += ' — supera el 100%.';
+    };
+    ['input','change'].forEach(ev => form.addEventListener(ev, upd)); upd();
+    if (isNew) setTimeout(() => form.elements['name'].focus(), 320);
+  }, onSubmit: (fd, form) => {
+    const name = (fd.get('name') || '').trim(); if (!name) return fieldErr(form, 'name', 'Escribí el nombre de la evaluación.');
+    const w = parseNum(fd.get('weight')); if (!isNum(w) || w < 0 || w > 100) return fieldErr(form, 'weight', 'El porcentaje debe ser un número entre 0 y 100.');
+    const g = parseNum(fd.get('grade')); if (g !== null && (!isNum(g) || g < 0 || g > 100)) return fieldErr(form, 'grade', 'La calificación debe estar entre 0 y 100, o vacía.');
+    const obj = e || {id:uid(), createdAt:new Date().toISOString()};
+    Object.assign(obj, {name, subjectId:fd.get('subjectId'), weight:w, grade:g, date:fd.get('date') || '', week:fd.get('week') ? Number(fd.get('week')) : null, notes:(fd.get('notes') || '').trim()});
+    commit(() => { if (isNew) S.evaluations.push(obj); });
+    const st = gradeStats(obj.subjectId);
+    if (st.over) toast(`Atención: los porcentajes de la materia suman ${num(st.totalWeight)}%.`, {type:'danger', ms:5000});
+    else toast(isNew ? 'Evaluación registrada' : 'Evaluación actualizada', {type:'ok'});
+  }});
+}
+function formWeekItem(x, preset={}) {
+  const isNew = !x;
+  const d = x || {subjectId:preset.subjectId, week:preset.week || 1, type:'tema', title:'', detail:'', done:false};
+  const body = `
+    <div class="field"><span>Tipo</span><div class="chipset">${Object.entries(TYPES).map(([k,l]) => `<label><input type="radio" name="type" value="${k}" ${d.type === k ? 'checked' : ''}><span>${l}</span></label>`).join('')}</div></div>
+    <label class="field"><span>Título</span><input class="input" name="title" value="${esc(d.title)}" placeholder="Ej.: Modelo OSI y amenazas comunes" required></label>
+    <label class="field"><span>Detalle (opcional)</span><textarea class="input" name="detail" placeholder="Páginas, capítulo, enlace, indicaciones…">${esc(d.detail)}</textarea></label>
+    <label class="field"><span>Semana</span><select class="input" name="week">${Array.from({length:WEEKS}, (_, i) => opt(i+1, 'Semana ' + (i+1), d.week)).join('')}</select></label>
+    ${!isNew ? `<div class="sheet-danger"><button type="button" class="btn danger" data-action="delete-witem" data-id="${x.id}">${ic('trash')} Eliminar</button></div>` : ''}`;
+  openSheet({title: isNew ? 'Agregar a la semana ' + d.week : 'Editar contenido', body, onOpen: form => { if (isNew) setTimeout(() => form.elements['title'].focus(), 320); }, onSubmit: (fd, form) => {
+    const title = (fd.get('title') || '').trim(); if (!title) return fieldErr(form, 'title', 'Escribí un título.');
+    const obj = x || {id:uid(), subjectId:d.subjectId, done:false, createdAt:new Date().toISOString()};
+    Object.assign(obj, {type:fd.get('type') || 'tema', title, detail:(fd.get('detail') || '').trim(), week:Number(fd.get('week'))});
+    openWeeks.add(obj.subjectId + ':' + obj.week);
+    commit(() => { if (isNew) S.weekItems.push(obj); });
+  }});
+}
+function formSubject(s) {
+  const sem = s ? semById(s.semesterId) : viewSem(); if (!sem) { toast('Primero creá un cuatrimestre.', {type:'danger'}); return; }
+  const isNew = !s;
+  const used = subjectsOf(sem.id).map(x => x.color);
+  const d = s || {name:'', color:COLORS.find(c => !used.includes(c)) || COLORS[0], teacher:'', room:'', schedule:'', link:'', notes:''};
+  const body = `
+    <label class="field"><span>Nombre de la materia</span><input class="input" name="name" value="${esc(d.name)}" required></label>
+    <div class="field"><span>Color</span><div class="swatches">${COLORS.map(c => `<label><input type="radio" name="color" value="${c}" ${d.color === c ? 'checked' : ''} aria-label="Color ${c}"><span style="--c:${c}"></span></label>`).join('')}</div></div>
+    <label class="field"><span>Docente</span><input class="input" name="teacher" value="${esc(d.teacher)}" placeholder="Opcional"></label>
+    <div class="grid2"><label class="field"><span>Aula</span><input class="input" name="room" value="${esc(d.room)}" placeholder="Opcional"></label><label class="field"><span>Horario</span><input class="input" name="schedule" value="${esc(d.schedule)}" placeholder="Ej.: Mar 6–9 p. m."></label></div>
+    <label class="field"><span>Enlace de clase</span><input class="input" name="link" type="url" inputmode="url" autocapitalize="off" value="${esc(d.link)}" placeholder="https://…"></label>
+    <label class="field"><span>Notas generales</span><textarea class="input" name="notes" placeholder="Opcional">${esc(d.notes)}</textarea></label>
+    ${!isNew ? `<div class="sheet-danger">${s.archived ? `<button type="button" class="btn" data-action="unarchive-subject" data-id="${s.id}">${ic('restore')} Restaurar materia</button><button type="button" class="btn danger" data-action="delete-subject" data-id="${s.id}">${ic('trash')} Eliminar definitivamente</button>` : `<button type="button" class="btn" data-action="archive-subject" data-id="${s.id}">${ic('archive')} Archivar materia</button>`}</div>` : ''}`;
+  openSheet({title: isNew ? 'Nueva materia' : 'Editar materia', body, onSubmit: (fd, form) => {
+    const name = (fd.get('name') || '').trim(); if (!name) return fieldErr(form, 'name', 'Escribí el nombre de la materia.');
+    const obj = s || {id:uid(), semesterId:sem.id, archived:false, createdAt:new Date().toISOString()};
+    Object.assign(obj, {name, color:fd.get('color') || COLORS[0], teacher:fd.get('teacher').trim(), room:fd.get('room').trim(), schedule:fd.get('schedule').trim(), link:fd.get('link').trim(), notes:fd.get('notes').trim()});
+    commit(() => { if (isNew) S.subjects.push(obj); });
+    toast(isNew ? 'Materia agregada' : 'Materia actualizada', {type:'ok'});
+  }});
+}
+function formSemester(s) {
+  const isNew = !s;
+  const base = todayISO();
+  const d = s || {name:'', start:mondayOf(base), end:addDays(mondayOf(base), WEEKS * 7 - 1)};
+  const others = S.semesters.filter(x => !s || x.id !== s.id);
+  const body = `
+    <label class="field"><span>Nombre</span><input class="input" name="name" value="${esc(d.name)}" placeholder="Ej.: Cuatrimestre ene–abr 2027" required></label>
+    <div class="grid2"><label class="field"><span>Inicio</span><input class="input" type="date" name="start" value="${esc(d.start)}"></label><label class="field"><span>Finalización</span><input class="input" type="date" name="end" value="${esc(d.end)}"></label></div>
+    <div class="hint" id="sem-hint"></div>
+    ${isNew ? `<label class="field"><span>Materias</span><select class="input" name="copyFrom">${opt('', 'Empezar sin materias', '')}${others.map(x => opt(x.id, 'Copiar nombres y colores de: ' + x.name, '')).join('')}</select><small>Solo se copian nombre, color, docente, aula, horario y enlace. Podés editarlas después.</small></label>
+    ${S.semesters.some(x => !x.archived) ? `<label class="switch"><span>Archivar los cuatrimestres activos</span><input type="checkbox" name="archiveOthers" checked></label>` : ''}` :
+    `<div class="sheet-danger">${vsBtn(s)}${s.archived ? `<button type="button" class="btn" data-action="unarchive-sem" data-id="${s.id}">${ic('restore')} Reactivar cuatrimestre</button>` : `<button type="button" class="btn" data-action="archive-sem" data-id="${s.id}">${ic('archive')} Archivar cuatrimestre</button>`}<button type="button" class="btn danger" data-action="delete-sem" data-id="${s.id}">${ic('trash')} Eliminar definitivamente</button></div>`}`;
+  openSheet({title: isNew ? 'Nuevo cuatrimestre' : 'Editar cuatrimestre', body, onOpen: form => {
+    let endTouched = !isNew; const F = form.elements;
+    const upd = () => { const a = F.start.value, b = F.end.value; const h = $('#sem-hint', form); if (validISO(a) && validISO(b)) { const days = diffDays(a, b) + 1; h.innerHTML = `Duración: <b>${num(days / 7, 1)} semanas</b> (${days} días). El programa siempre muestra ${WEEKS} semanas desde el inicio.`; h.className = 'hint' + (days < 1 ? ' danger' : ''); } else h.textContent = 'Indicá ambas fechas.'; };
+    F.start.addEventListener('change', () => { if (!endTouched && validISO(F.start.value)) F.end.value = addDays(F.start.value, WEEKS * 7 - 1); upd(); });
+    F.end.addEventListener('change', () => { endTouched = true; upd(); }); upd();
+  }, onSubmit: (fd, form) => {
+    const name = (fd.get('name') || '').trim(); if (!name) return fieldErr(form, 'name', 'Escribí un nombre.');
+    const start = fd.get('start'), end = fd.get('end');
+    if (!validISO(start) || !validISO(end)) return fieldErr(form, 'start', 'Indicá las fechas de inicio y finalización.');
+    if (diffDays(start, end) < 0) return fieldErr(form, 'end', 'La finalización debe ser posterior al inicio.');
+    if (isNew) {
+      const ns = {id:uid(), name, start, end, archived:false, weekOffset:0, createdAt:new Date().toISOString()};
+      const from = fd.get('copyFrom');
+      commit(() => {
+        if (fd.get('archiveOthers')) S.semesters.forEach(x => x.archived = true);
+        S.semesters.push(ns);
+        if (from) subjectsOf(from).forEach(x => S.subjects.push({id:uid(), semesterId:ns.id, name:x.name, color:x.color, teacher:x.teacher, room:x.room, schedule:x.schedule, link:x.link, notes:'', archived:false, createdAt:new Date().toISOString()}));
+        S.ui.viewSemesterId = ns.id;
+      });
+      toast('Cuatrimestre creado', {type:'ok'});
+    } else { commit(() => Object.assign(s, {name, start, end})); toast('Cuatrimestre actualizado', {type:'ok'}); }
+  }});
+}
+function vsBtn(s) { return S.ui.viewSemesterId === s.id ? '' : `<button type="button" class="btn primary" data-action="view-sem" data-id="${s.id}">Ver este cuatrimestre</button>`; }
+function formAdjustWeek() {
+  const sem = viewSem(); if (!sem) return;
+  const raw = rawWeek(sem, todayISO()); const cur = currentWeek(sem);
+  const body = `<p class="muted" style="margin-top:0">Según la fecha de inicio (${esc(fmtDMY(sem.start))}) hoy corresponde a la <b style="color:var(--text)">${inWeeks(raw) ? 'semana ' + raw : raw < 1 ? 'semana previa al inicio' : 'semana ' + raw + ' (después de la 15)'}</b>. Si la universidad cuenta distinto (feriados, semana de receso, inicio desfasado), indicá la semana real. La corrección se mantiene y avanza sola cada lunes.</p>
+  <label class="field"><span>Semana actual real</span><select class="input" name="w">${Array.from({length:WEEKS}, (_, i) => opt(i+1, 'Semana ' + (i+1), inWeeks(cur) || '')).join('')}</select></label>
+  ${sem.weekOffset ? `<div class="sheet-danger"><button type="button" class="btn" data-action="reset-week">Volver al cálculo automático</button></div>` : ''}`;
+  openSheet({title:'Corregir semana', body, onSubmit: fd => { const w = Number(fd.get('w')); commit(() => { sem.weekOffset = w - raw; }); toast(sem.weekOffset ? `Semana ajustada a ${w}` : 'Semana según cálculo automático', {type:'ok'}); }});
+}
+function pickSemester() {
+  const act = S.semesters.filter(s => !s.archived), arc = S.semesters.filter(s => s.archived);
+  const row = s => `<button type="button" class="set-row" data-action="view-sem" data-id="${s.id}"><span class="live-dot ${s.archived ? 'arch' : ''}"></span><span class="grow"><b>${esc(s.name)}</b><span>${esc(fmtDMY(s.start))} – ${esc(fmtDMY(s.end))} · ${subjectsOf(s.id).length} materias</span></span>${S.ui.viewSemesterId === s.id ? ic('check') : ''}</button>`;
+  openSheet({title:'Cuatrimestres', body: `<div class="flabel" style="margin-bottom:8px">Activos</div><div class="set-group">${act.map(row).join('') || '<div class="set-body muted">Ninguno</div>'}</div>${arc.length ? `<div class="flabel" style="margin:18px 0 8px">Archivados</div><div class="set-group">${arc.map(row).join('')}</div>` : ''}<div class="btn-col"><button type="button" class="btn" data-action="new-sem">${ic('plus')} Nuevo cuatrimestre</button><a class="btn ghost" href="#/ajustes" data-action="close-sheet-go" data-href="#/ajustes">Gestionar cuatrimestres</a></div>`});
+}
+
+/* ---------- Recordatorios y notificaciones ---------- */
+function offsetText(m) { if (m === 0) return 'Vence ahora'; if (m < 60) return `Vence en ${m} min`; if (m < 1440) return `Vence en ${m / 60} h`; const d = m / 1440; return d === 7 ? 'Vence en 1 semana' : `Vence en ${d} ${d === 1 ? 'día' : 'días'}`; }
+function checkReminders() {
+  if (!S) return;
+  const now = Date.now(); let changed = false;
+  for (const t of S.tasks) {
+    if (t.status === 'terminado' || !t.date || !(t.reminders || []).length) continue;
+    const ts = taskSem(t); if (!ts || ts.archived) continue;
+    const ref = refMoment(t).getTime();
+    for (const off of t.reminders) {
+      const fire = ref - off * 6e4;
+      if (fire > now) continue;
+      const k = `${t.id}|${off}|${t.date}|${t.time || ''}`;
+      if (S.notified[k]) continue;
+      S.notified[k] = now; changed = true;
+      const late = now - fire;
+      if (late > 3 * 864e5) continue; // demasiado viejo: se omite
+      if (flag(t) === 'overdue') continue; // ya vencido: se ve en "Vencidos"
+      const s = subjectById(t.subjectId);
+      const when = off === 0 ? 'Vence ahora' : leftText(t);
+      const text = `${t.title} — ${when}${s ? ' · ' + s.name : ''}`;
+      S.inbox = S.inbox.filter(x => !(x.taskId === t.id && !x.read && x.at === now));
+      S.inbox.unshift({id:uid(), taskId:t.id, text, at:now, read:false});
+      if (late <= 30 * 6e4) {
+        sysNotify(t.title, `${when} (${dueText(t)})${s ? ' · ' + s.name : ''}`, t.id);
+        toast('⏰ ' + text, {ms:6000, actionText:'Ver', action:() => formTask(taskById(t.id))});
+      }
+    }
+  }
+  // limpieza
+  const ids = new Set(S.tasks.map(t => t.id));
+  for (const k of Object.keys(S.notified)) if (!ids.has(k.split('|')[0])) { delete S.notified[k]; changed = true; }
+  if (S.inbox.length > 40) { S.inbox = S.inbox.slice(0, 40); changed = true; }
+  if (changed) { save(); if (route().view === 'inicio') softRefresh(); }
+  updateBadges();
+}
+async function sysNotify(title, body, tag) {
+  if (!('Notification' in window) || Notification.permission !== 'granted' || !S.settings.notifications) return false;
+  const opts = {body, tag: 'cuatri-' + (tag || uid()), icon:'icons/icon-192.png', badge:'icons/icon-192.png', data:{url:'./index.html#/inicio'}};
+  try {
+    if ('serviceWorker' in navigator) { const reg = await navigator.serviceWorker.getRegistration(); if (reg) { await reg.showNotification(title, opts); return true; } }
+    new Notification(title, opts); return true;
+  } catch (e) { console.warn(e); return false; }
+}
+async function enableNotifications() {
+  if (!('Notification' in window)) { toast('Este navegador no admite notificaciones.', {type:'danger'}); return; }
+  try {
+    const p = await Notification.requestPermission();
+    if (p === 'granted') { S.settings.notifications = true; save(); toast('Notificaciones activadas', {type:'ok'}); sysNotify('Cuatri', 'Las notificaciones están activadas.', 'activadas'); }
+    else toast('No se otorgó el permiso. Los avisos se mostrarán dentro de la app.', {type:'danger', ms:5000});
+  } catch (e) { toast('No se pudo pedir el permiso: ' + e.message, {type:'danger'}); }
+  render();
+}
+
+/* ---------- Archivos: respaldo e .ics ---------- */
+async function deliverFile(filename, text, mime, preferShare) {
+  const file = new File([text], filename, {type:mime});
+  if (preferShare && navigator.canShare && navigator.canShare({files:[file]})) {
+    try { await navigator.share({files:[file], title:filename}); return true; }
+    catch (e) { if (e.name === 'AbortError') return false; }
+  }
+  const url = URL.createObjectURL(file);
+  const a = document.createElement('a'); a.href = url; a.download = filename; a.rel = 'noopener';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+  return true;
+}
+function backupText() { return JSON.stringify({app:'cuatri', version:1, appVersion:APP_VERSION, exportedAt:new Date().toISOString(), data:S}, null, 2); }
+async function exportBackup(share) {
+  persistNow(true);
+  const ok = await deliverFile(`cuatri-respaldo-${todayISO()}.json`, backupText(), 'application/json', share);
+  if (ok) { S.meta.lastBackup = new Date().toISOString(); save(); toast(share ? 'Respaldo listo para guardar' : 'Respaldo descargado', {type:'ok'}); }
+}
+async function importBackup(file) {
+  let obj;
+  try { obj = JSON.parse(await file.text()); } catch (e) { toast('El archivo no es un respaldo válido (JSON dañado).', {type:'danger', ms:5000}); return; }
+  const data = obj && obj.app === 'cuatri' && obj.data ? obj.data : obj;
+  if (!data || !Array.isArray(data.semesters) || !Array.isArray(data.subjects)) { toast('El archivo no tiene el formato de respaldo de Cuatri.', {type:'danger', ms:5000}); return; }
+  const n = data.semesters.length, m = data.subjects.length, t = (data.tasks || []).length, ev = (data.evaluations || []).length;
+  const ok = await confirmDialog({title:'¿Restaurar este respaldo?', message:`Contiene ${n} cuatrimestre(s), ${m} materia(s), ${ev} evaluación(es) y ${t} pendiente(s)${obj.exportedAt ? ', exportado el ' + esc(new Date(obj.exportedAt).toLocaleString('es-CR', {dateStyle:'medium', timeStyle:'short'})) : ''}.<br><br><b>Reemplazará todos los datos actuales de este dispositivo.</b>`, confirmText:'Restaurar', danger:true});
+  if (!ok) return;
+  S = migrate(data); persistNow(); applyTheme(); go('#/inicio');
+  toast('Respaldo restaurado', {type:'ok'});
+}
+function icsEsc(s) { return String(s || '').replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/,/g, '\\,').replace(/;/g, '\\;'); }
+function icsFold(line) { const out = []; let s = line; while (s.length > 60) { out.push(s.slice(0, 60)); s = ' ' + s.slice(60); } out.push(s); return out.join('\r\n'); }
+function icsLocal(d) { return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`; }
+function buildICS(tasks) {
+  const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
+  const L = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Cuatri//Organizador universitario//ES','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:Cuatri'];
+  for (const t of tasks) {
+    if (!t.date) continue;
+    const s = subjectById(t.subjectId);
+    L.push('BEGIN:VEVENT', `UID:${t.id}@cuatri.local`, `DTSTAMP:${stamp}`);
+    if (t.time) { const st = refMoment(t); L.push(`DTSTART:${icsLocal(st)}`, `DTEND:${icsLocal(new Date(st.getTime() + 30 * 6e4))}`); }
+    else L.push(`DTSTART;VALUE=DATE:${t.date.replace(/-/g, '')}`, `DTEND;VALUE=DATE:${addDays(t.date, 1).replace(/-/g, '')}`);
+    L.push(`SUMMARY:${icsEsc((s ? s.name + ': ' : '') + t.title)}`);
+    const desc = [t.description, `Prioridad: ${PRIORITIES[t.priority]}`, `Estado: ${STATUSES[t.status]}`].filter(Boolean).join('\n');
+    L.push(`DESCRIPTION:${icsEsc(desc)}`);
+    for (const off of (t.reminders || [])) {
+      let trig;
+      if (t.time) trig = off === 0 ? 'PT0M' : `-PT${off}M`;
+      else { const m = REF_HOUR_NO_TIME * 60 - off; trig = m >= 0 ? `PT${m}M` : `-PT${-m}M`; }
+      L.push('BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${icsEsc(t.title)}`, `TRIGGER:${trig}`, 'END:VALARM');
+    }
+    L.push('END:VEVENT');
+  }
+  L.push('END:VCALENDAR');
+  return L.map(icsFold).join('\r\n') + '\r\n';
+}
+async function exportICS(tasks, name, share=false) {
+  const list = tasks.filter(t => t.date && t.status !== 'terminado');
+  if (!list.length) { toast('No hay pendientes abiertos con fecha para exportar.', {type:'danger'}); return; }
+  const ok = await deliverFile(name, buildICS(list), 'text/calendar', share);
+  if (ok) toast(`${list.length} pendiente(s) en el archivo .ics`, {type:'ok', ms:4500});
+}
+async function storageInfo() {
+  const el = $('#storage-info'); if (!el || !navigator.storage) return;
+  try {
+    const persisted = navigator.storage.persisted ? await navigator.storage.persisted() : false;
+    const est = navigator.storage.estimate ? await navigator.storage.estimate() : null;
+    const size = new Blob([lsGet(KEY) || '']).size;
+    el.textContent = `${storageOK ? 'Guardado automático activo.' : 'No se puede guardar.'} Datos: ${num(size / 1024, 1)} KB.${persisted ? ' Almacenamiento persistente concedido.' : ''}${est && est.quota ? ' Espacio disponible aprox.: ' + num((est.quota - (est.usage || 0)) / 1048576, 0) + ' MB.' : ''}`;
+  } catch (e) {}
+}
+
+/* ---------- Acciones ---------- */
+const A = {
+  'close-sheet': () => closeSheet(),
+  'close-sheet-go': el => { closeSheet(); go(el.dataset.href); },
+  'fab': () => {
+    const r = route();
+    if (r.view === 'materia') { if (r.sub === 'notas') formEval(null, {subjectId:r.id}); else formTask(null, {subjectId:r.id}); }
+    else if (r.view === 'agenda' && ['dia','mes'].includes(S.ui.agendaMode)) formTask(null, {date:agendaDate});
+    else formTask(null);
+  },
+  'new-task': el => { closeSheetIfOpen(); setTimeout(() => formTask(null, {subjectId:el.dataset.subject || '', week:el.dataset.week ? Number(el.dataset.week) : null, date:el.dataset.date || '', evaluationId:el.dataset.eval || ''}), sheetDelay()); },
+  'edit-task': el => { const t = taskById(el.dataset.id); if (t) { closeSheetIfOpen(); setTimeout(() => formTask(t), sheetDelay()); } else toast('Este pendiente ya no existe.'); },
+  'toggle-done': el => {
+    const t = taskById(el.dataset.id); if (!t) return;
+    const prev = t.status, prevAt = t.completedAt;
+    commit(() => { if (t.status === 'terminado') { t.status = 'pendiente'; t.completedAt = null; } else { t.status = 'terminado'; t.completedAt = new Date().toISOString(); } });
+    toast(t.status === 'terminado' ? 'Marcado como terminado' : 'Marcado como pendiente', {actionText:'Deshacer', action:() => commit(() => { t.status = prev; t.completedAt = prevAt; })});
+  },
+  'delete-task': async el => {
+    const t = taskById(el.dataset.id); if (!t) return;
+    if (!await confirmDialog({title:'¿Eliminar pendiente?', message:`“${esc(t.title)}” se eliminará.`, confirmText:'Eliminar', danger:true})) return;
+    closeSheet(); commit(() => { S.tasks = S.tasks.filter(x => x.id !== t.id); S.inbox = S.inbox.filter(x => x.taskId !== t.id); });
+    toast('Pendiente eliminado', {actionText:'Deshacer', action:() => commit(() => S.tasks.push(t))});
+  },
+  'task-ics': el => { const t = taskById(el.dataset.id); if (t) exportICS([t], `cuatri-${t.title.replace(/[^\w\-áéíóúñ ]/gi, '').slice(0, 30).trim().replace(/\s+/g, '-') || 'pendiente'}.ics`); },
+  'export-ics': () => { const sem = viewSem(); exportICS(S.tasks.filter(t => !sem || t.semesterId === sem.id), `cuatri-pendientes-${todayISO()}.ics`); },
+  'export-ics-share': () => { const sem = viewSem(); exportICS(S.tasks.filter(t => !sem || t.semesterId === sem.id), `cuatri-pendientes-${todayISO()}.ics`, true); },
+  'new-eval': el => { closeSheetIfOpen(); setTimeout(() => formEval(null, {subjectId:el.dataset.subject, week:el.dataset.week ? Number(el.dataset.week) : null}), sheetDelay()); },
+  'edit-eval': el => { const e = evalById(el.dataset.id); if (e) { closeSheetIfOpen(); setTimeout(() => formEval(e), sheetDelay()); } },
+  'delete-eval': async el => {
+    const e = evalById(el.dataset.id); if (!e) return;
+    if (!await confirmDialog({title:'¿Eliminar evaluación?', message:`“${esc(e.name)}” (${num(e.weight)}%) se eliminará y dejará de contar en las notas.`, confirmText:'Eliminar', danger:true})) return;
+    closeSheet();
+    const linked = S.tasks.filter(t => t.evaluationId === e.id);
+    commit(() => { S.evaluations = S.evaluations.filter(x => x.id !== e.id); linked.forEach(t => t.evaluationId = null); });
+    toast('Evaluación eliminada', {actionText:'Deshacer', action:() => commit(() => { S.evaluations.push(e); linked.forEach(t => t.evaluationId = e.id); })});
+  },
+  'new-witem': el => formWeekItem(null, {subjectId:el.dataset.subject, week:Number(el.dataset.week)}),
+  'edit-witem': el => { const x = S.weekItems.find(i => i.id === el.dataset.id); if (x) formWeekItem(x); },
+  'toggle-witem': el => { const x = S.weekItems.find(i => i.id === el.dataset.id); if (x) commit(() => x.done = !x.done); },
+  'delete-witem': async el => {
+    const x = S.weekItems.find(i => i.id === el.dataset.id); if (!x) return;
+    if (!await confirmDialog({title:'¿Eliminar contenido?', message:`“${esc(x.title)}” se quitará de la semana ${x.week}.`, confirmText:'Eliminar', danger:true})) return;
+    closeSheet(); commit(() => S.weekItems = S.weekItems.filter(i => i.id !== x.id));
+  },
+  'toggle-week': el => { const k = el.dataset.key; openWeeks.has(k) ? openWeeks.delete(k) : openWeeks.add(k); const w = el.closest('.week'); w.classList.toggle('open'); el.setAttribute('aria-expanded', w.classList.contains('open')); },
+  'new-subject': () => formSubject(null),
+  'edit-subject': el => formSubject(subjectById(el.dataset.id)),
+  'archive-subject': async el => {
+    const s = subjectById(el.dataset.id); if (!s) return;
+    if (!await confirmDialog({title:'¿Archivar materia?', message:`“${esc(s.name)}” dejará de aparecer en Inicio y en los formularios. Sus notas, programa y pendientes se conservan y podés restaurarla cuando quieras.`, confirmText:'Archivar'})) return;
+    closeSheet(); commit(() => s.archived = true); go('#/materias'); toast('Materia archivada', {actionText:'Deshacer', action:() => commit(() => s.archived = false)});
+  },
+  'unarchive-subject': el => { const s = subjectById(el.dataset.id); if (!s) return; closeSheet(); commit(() => s.archived = false); toast('Materia restaurada', {type:'ok'}); },
+  'delete-subject': async el => {
+    const s = subjectById(el.dataset.id); if (!s) return;
+    if (!await confirmDialog({title:'¿Eliminar materia definitivamente?', message:`Se eliminarán “${esc(s.name)}”, sus evaluaciones, su programa de 15 semanas y sus pendientes. No se puede deshacer.`, confirmText:'Eliminar', danger:true, requireText:'ELIMINAR'})) return;
+    closeSheet();
+    commit(() => { S.subjects = S.subjects.filter(x => x.id !== s.id); S.evaluations = S.evaluations.filter(x => x.subjectId !== s.id); S.weekItems = S.weekItems.filter(x => x.subjectId !== s.id); S.tasks = S.tasks.filter(x => x.subjectId !== s.id); });
+    go('#/materias'); toast('Materia eliminada');
+  },
+  'toggle-arch-subjects': () => { showArchivedSubjects = !showArchivedSubjects; render(); },
+  'pick-semester': () => pickSemester(),
+  'view-sem': el => { closeSheet(); commit(() => S.ui.viewSemesterId = el.dataset.id); const r = route(); if (r.view === 'materia') go('#/materias'); toast('Viendo: ' + semById(el.dataset.id).name); },
+  'new-sem': () => { closeSheetIfOpen(); setTimeout(() => formSemester(null), sheetDelay()); },
+  'edit-sem': el => formSemester(semById(el.dataset.id)),
+  'archive-sem': async el => {
+    const s = semById(el.dataset.id); if (!s) return;
+    if (!await confirmDialog({title:'¿Archivar cuatrimestre?', message:`“${esc(s.name)}” y todos sus datos se conservarán para consulta. Podés reactivarlo cuando quieras.`, confirmText:'Archivar'})) return;
+    closeSheet();
+    commit(() => { s.archived = true; if (S.ui.viewSemesterId === s.id) { const other = S.semesters.find(x => !x.archived); if (other) S.ui.viewSemesterId = other.id; } });
+    toast('Cuatrimestre archivado', {actionText:'Deshacer', action:() => commit(() => s.archived = false)});
+  },
+  'unarchive-sem': el => { const s = semById(el.dataset.id); if (!s) return; closeSheet(); commit(() => { s.archived = false; S.ui.viewSemesterId = s.id; }); toast('Cuatrimestre reactivado', {type:'ok'}); },
+  'delete-sem': async el => {
+    const s = semById(el.dataset.id); if (!s) return;
+    if (!await confirmDialog({title:'¿Eliminar cuatrimestre?', message:`Se eliminarán “${esc(s.name)}” con todas sus materias, notas, programas y pendientes. Si solo querés guardarlo, usá Archivar.`, confirmText:'Eliminar', danger:true, requireText:'ELIMINAR'})) return;
+    closeSheet();
+    commit(() => {
+      const subIds = new Set(S.subjects.filter(x => x.semesterId === s.id).map(x => x.id));
+      S.semesters = S.semesters.filter(x => x.id !== s.id); S.subjects = S.subjects.filter(x => !subIds.has(x.id));
+      S.evaluations = S.evaluations.filter(x => !subIds.has(x.subjectId)); S.weekItems = S.weekItems.filter(x => !subIds.has(x.subjectId));
+      S.tasks = S.tasks.filter(x => x.semesterId !== s.id);
+      if (S.ui.viewSemesterId === s.id) S.ui.viewSemesterId = (S.semesters.find(x => !x.archived) || S.semesters[0] || {}).id || null;
+    });
+    toast('Cuatrimestre eliminado');
+  },
+  'adjust-week': () => formAdjustWeek(),
+  'reset-week': () => { const s = viewSem(); closeSheet(); commit(() => s.weekOffset = 0); toast('Semana según cálculo automático', {type:'ok'}); },
+  'seed': () => { const {sem, subs} = seedData(); commit(() => { S.semesters.forEach(x => x.archived = true); S.semesters.push(sem); S.subjects.push(...subs); S.ui.viewSemesterId = sem.id; }); toast('Datos iniciales cargados', {type:'ok'}); },
+  'go-filter': el => { const f = el.dataset.f; S.ui.agendaMode = 'lista'; S.ui.filters = Object.assign({}, S.ui.filters, {status:f, subject:'', priority:'', week:'', sort:'fecha'}); save(); go('#/agenda'); },
+  'agenda-mode': el => { S.ui.agendaMode = el.dataset.mode; save(); render(); },
+  'agenda-nav': el => { const n = Number(el.dataset.n), u = el.dataset.unit; if (u === 'month') { const d = parseD(agendaDate); const nd = new Date(d.getFullYear(), d.getMonth() + n, 1); const t = todayISO(); agendaDate = iso(nd).slice(0,7) === t.slice(0,7) ? t : iso(nd); } else agendaDate = addDays(agendaDate, n); render(); },
+  'agenda-today': () => { agendaDate = todayISO(); render(); },
+  'agenda-day': el => { agendaDate = el.dataset.date; render(); },
+  'filter-status': el => { S.ui.filters.status = el.dataset.v; save(); render(); },
+  'filter-reset': () => { S.ui.filters = {subject:'', status:'activos', priority:'', week:'', sort:'fecha'}; save(); render(); },
+  'inbox-clear': () => commit(() => S.inbox.forEach(x => x.read = true)),
+  'dismiss-install': () => commit(() => S.settings.installDismissed = true),
+  'notif-enable': () => enableNotifications(),
+  'notif-disable': () => { commit(() => S.settings.notifications = false); toast('Notificaciones desactivadas. Seguirás viendo los avisos en la app.'); },
+  'notif-test': async () => { const ok = await sysNotify('Cuatri · prueba', 'Así se verán tus recordatorios.', 'prueba'); toast(ok ? 'Notificación de prueba enviada' : 'No se pudo mostrar la notificación del sistema.', {type: ok ? 'ok' : 'danger'}); },
+  'export-share': () => exportBackup(true),
+  'export-download': () => exportBackup(false),
+  'import': () => { const f = $('#import-file'); f.value = ''; f.click(); },
+  'persist': async () => {
+    if (!navigator.storage || !navigator.storage.persist) { toast('Este navegador no permite pedir almacenamiento persistente. Hacé respaldos periódicos.', {ms:5000}); return; }
+    try { const ok = await navigator.storage.persist(); toast(ok ? 'Almacenamiento persistente concedido' : 'El navegador no lo concedió por ahora. Instalala y usala seguido; hacé respaldos.', {type: ok ? 'ok' : '', ms:5000}); storageInfo(); } catch (e) { toast('No se pudo solicitar.', {type:'danger'}); }
+  },
+  'clear-all': async () => {
+    if (!await confirmDialog({title:'¿Borrar todos los datos?', message:'Se eliminarán <b>todos</b> los cuatrimestres (activos y archivados), materias, evaluaciones, pendientes, programas y ajustes de este dispositivo. <b>No se puede deshacer.</b> Si no exportaste un respaldo, cancelá y hacelo primero.', confirmText:'Borrar todo', danger:true, requireText:'BORRAR'})) return;
+    S = emptyState(); persistNow(); applyTheme(); go('#/inicio'); updateBadges();
+    toast('Se borraron todos los datos.', {ms:4000});
+  }
+};
+function closeSheetIfOpen() { if ($('#sheet-root').classList.contains('open')) closeSheet(); }
+function sheetDelay() { return $('#sheet-root').innerHTML ? 260 : 0; }
+
+document.addEventListener('click', e => {
+  const link = e.target.closest('a[href^="#/"]');
+  if (link && !link.dataset.action) { e.preventDefault(); go(link.getAttribute('href')); return; }
+  const el = e.target.closest('[data-action]'); if (!el) return;
+  const fn = A[el.dataset.action]; if (!fn) return;
+  if (el.tagName === 'A' && el.dataset.action !== 'go-filter' && el.dataset.action !== 'close-sheet-go') return;
+  e.preventDefault(); fn(el, e);
+});
+document.addEventListener('change', e => {
+  const el = e.target;
+  if (el.id === 'import-file') { if (el.files && el.files[0]) importBackup(el.files[0]); return; }
+  if (el.dataset.filter) { S.ui.filters[el.dataset.filter] = el.value; save(); render(); return; }
+  const k = el.dataset.setting; if (!k) return;
+  if (k === 'theme') { S.settings.theme = el.value; applyTheme(); save(); return; }
+  if (k === 'reminder') { S.settings.reminderOffsets = $$('[data-setting=reminder]').filter(x => x.checked).map(x => Number(x.value)).sort((a,b) => b - a); save(); flashSaved(); return; }
+  if (k === 'soonDays') { S.settings.soonDays = Number(el.value); save(); return; }
+  if (k === 'passGrade') { const v = parseNum(el.value); if (!isNum(v) || v < 0 || v > 100) { toast('La nota mínima debe estar entre 0 y 100.', {type:'danger'}); el.value = num(S.settings.passGrade); return; } S.settings.passGrade = v; save(); return; }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { if ($('#dialog-root').classList.contains('open')) return; closeSheetIfOpen(); } });
+window.addEventListener('hashchange', () => { const h = readHash() || '#/inicio'; if (h === curHash) return; curHash = h; closeSheetIfOpen(); render(); });
+window.addEventListener('online', onlineState); window.addEventListener('offline', onlineState);
+window.addEventListener('storage', e => { if (e.key === KEY && e.newValue) { try { S = migrate(JSON.parse(e.newValue)); render(); } catch (err) {} } });
+matchMedia('(prefers-color-scheme: light)').addEventListener?.('change', applyTheme);
+
+/* ---------- Service worker (sin conexión) ---------- */
+function registerSW() {
+  if (!swCapable()) return;
+  const hadController = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.register('./sw.js').catch(err => console.warn('SW', err));
+  let shown = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => { if (hadController && !shown) { shown = true; toast('Hay una versión nueva de la app.', {actionText:'Recargar', action:() => location.reload(), ms:10000}); } });
+  navigator.serviceWorker.addEventListener('message', e => { if (e.data && e.data.type === 'open' && e.data.url) go(e.data.url.split('#')[1] ? '#' + e.data.url.split('#')[1] : '#/inicio'); });
+}
+
+/* ---------- Inicio ---------- */
+load(); applyTheme(); onlineState();
+try { if (hashRouting && !readHash()) history.replaceState(null, '', '#/inicio'); } catch (e) { /* vista previa aislada: se navega en memoria */ }
+render();
+registerSW();
+checkReminders();
+setInterval(checkReminders, 30000);
+setInterval(() => { if (!document.hidden && !$('#sheet-root').classList.contains('open') && !$('#dialog-root').classList.contains('open')) { const t = todayISO(); if (t !== window.__lastDay) { window.__lastDay = t; render(); } } }, 60000);
+window.__lastDay = todayISO();
+</script>
+</body>
+</html>
